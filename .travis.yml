@@ -4,9 +4,14 @@ php:
     - 7.1
     - 7.2
 
+services:
+    - postgresql
+
 before_script:
     - travis_retry composer self-update
     - travis_retry composer install --no-interaction --prefer-source
+    - psql -c 'create database message_delivery;' -U postgres
+    - cp .env.example .env
 
 script:
     - ./vendor/bin/phpcs --standard=PSR2 ./src ./tests
