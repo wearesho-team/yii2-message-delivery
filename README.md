@@ -28,8 +28,35 @@ return [
 ];
 ```
 
-## Authors
+### Queue
+This package provides optional [yii2-queue](https://github.com/yiisoft/yii2-queue) integration.
+To use it you have to install yii2-queue package:
+```bash
+composer require yiisoft/yii2-queue:^2.0
+```
+Then you may configure your application:
+```php
+<?php
+// common/config/main.php
 
+use Wearesho\Delivery;
+
+return [
+    'bootstrap' => [
+        [
+            'class' => Delivery\Yii2\Bootstrap::class,
+            'service' => [
+                'class' => Delivery\Yii2\Queue\Service::class,
+                'service' => Delivery\ServiceMock::class, // you your custom Delivery\ServiceInterface implementation
+            ],
+        ],
+    ],
+];
+```
+*Note: messages sent using Queue\Service have to correct work with serialize() and unserialize().
+See yii2-queue for details*
+
+## Authors
 - [Alexander <horat1us> Letnikow](mailto:reclamme@gmail.com)
 
 ## License
