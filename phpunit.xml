@@ -8,5 +8,8 @@
         <whitelist processUncoveredFilesFromWhiteList="true">
             <directory suffix=".php">src</directory>
         </whitelist>
+        <blacklist>
+            <directory>src/Migrations</directory>
+        </blacklist>
     </filter>
 </phpunit>
