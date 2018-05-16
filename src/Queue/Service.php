@@ -54,7 +54,8 @@ class Service extends base\BaseObject implements Delivery\ServiceInterface
         $job = new Delivery\Yii2\Queue\Job();
 
         $job->service = $this->service;
-        $job->message = $message;
+        $job->recipient = $message->getRecipient();
+        $job->text = $message->getText();
 
         $this->queue->push($job);
     }
