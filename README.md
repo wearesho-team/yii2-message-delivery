@@ -53,8 +53,7 @@ return [
     ],
 ];
 ```
-*Note: messages sent using Queue\Service have to correct work with serialize() and unserialize().
-See yii2-queue for details*
+*Note: recipient and text will be saved when job is created*
 
 ## Authors
 - [Alexander <horat1us> Letnikow](mailto:reclamme@gmail.com)
