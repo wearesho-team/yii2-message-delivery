@@ -17,7 +17,7 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
         $job = new Delivery\Yii2\Queue\Job();
 
         $this->assertEquals(
-            ['service', 'message',],
+            ['service', 'recipient', 'text',],
             $job->__sleep()
         );
     }
@@ -32,7 +32,8 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
 
         $job = new Delivery\Yii2\Queue\Job([
             'service' => $service,
-            'message' => $message,
+            'text' => $message->getText(),
+            'recipient' => $message->getRecipient(),
         ]);
 
         $job->execute('queue');
@@ -51,7 +52,7 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
         $service = new Delivery\ServiceMock();
         $job = new Delivery\Yii2\Queue\Job([
             'service' => $service,
-            'message' => $service
+            'text' => $service,
         ]);
         $job->execute('queue');
     }
