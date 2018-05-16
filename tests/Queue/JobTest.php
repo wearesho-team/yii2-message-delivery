@@ -45,14 +45,56 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
 
     /**
      * @expectedException \yii\base\InvalidConfigException
-     * @expectedExceptionMessage Message have to implement Wearesho\Delivery\MessageInterface
+     * @expectedExceptionMessage Recipient should be a string
      */
-    public function testInvalidMessage(): void
+    public function testInvalidRecipient(): void
     {
         $service = new Delivery\ServiceMock();
         $job = new Delivery\Yii2\Queue\Job([
             'service' => $service,
-            'text' => $service,
+            'recipient' => [],
+        ]);
+        $job->execute('queue');
+    }
+
+    /**
+     * @expectedException \yii\base\InvalidConfigException
+     * @expectedExceptionMessage Recipient should be a string
+     */
+    public function testEmptyRecipient(): void
+    {
+        $service = new Delivery\ServiceMock();
+        $job = new Delivery\Yii2\Queue\Job([
+            'service' => $service,
+        ]);
+        $job->execute('queue');
+    }
+
+    /**
+     * @expectedException \yii\base\InvalidConfigException
+     * @expectedExceptionMessage Text should be a string
+     */
+    public function testInvalidText(): void
+    {
+        $service = new Delivery\ServiceMock();
+        $job = new Delivery\Yii2\Queue\Job([
+            'service' => $service,
+            'recipient' => 'string',
+            'text' => [],
+        ]);
+        $job->execute('queue');
+    }
+
+    /**
+     * @expectedException \yii\base\InvalidConfigException
+     * @expectedExceptionMessage Text should be a string
+     */
+    public function testEmptyText(): void
+    {
+        $service = new Delivery\ServiceMock();
+        $job = new Delivery\Yii2\Queue\Job([
+            'service' => $service,
+            'recipient' => 'string',
         ]);
         $job->execute('queue');
     }
