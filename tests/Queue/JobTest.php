@@ -45,7 +45,7 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
 
     /**
      * @expectedException \yii\base\InvalidConfigException
-     * @expectedExceptionMessage Recipient should be a string
+     * @expectedExceptionMessage Recipient has to be be a string
      */
     public function testInvalidRecipient(): void
     {
@@ -59,7 +59,7 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
 
     /**
      * @expectedException \yii\base\InvalidConfigException
-     * @expectedExceptionMessage Recipient should be a string
+     * @expectedExceptionMessage Recipient has to be be a string
      */
     public function testEmptyRecipient(): void
     {
@@ -72,7 +72,7 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
 
     /**
      * @expectedException \yii\base\InvalidConfigException
-     * @expectedExceptionMessage Text should be a string
+     * @expectedExceptionMessage Text has to be be a string
      */
     public function testInvalidText(): void
     {
@@ -87,7 +87,7 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
 
     /**
      * @expectedException \yii\base\InvalidConfigException
-     * @expectedExceptionMessage Text should be a string
+     * @expectedExceptionMessage Text has to be be a string
      */
     public function testEmptyText(): void
     {

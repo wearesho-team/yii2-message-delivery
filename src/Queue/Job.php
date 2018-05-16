@@ -36,10 +36,10 @@ class Job extends base\BaseObject implements queue\JobInterface
         $service = di\Instance::ensure($this->service, Delivery\ServiceInterface::class);
 
         if (!is_string($this->recipient)) {
-            throw new base\InvalidConfigException("Recipient should be a string");
+            throw new base\InvalidConfigException("Recipient has to be be a string");
         }
         if (!is_string($this->text)) {
-            throw new base\InvalidConfigException("Text should be a string");
+            throw new base\InvalidConfigException("Text has to be be a string");
         }
 
         $message = new Delivery\Message($this->text, $this->recipient);
