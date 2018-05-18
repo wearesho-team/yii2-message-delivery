@@ -19,10 +19,11 @@ class Job extends base\BaseObject implements queue\JobInterface
      */
     public $service;
 
-    /**
-     * @var Delivery\MessageInterface
-     */
-    public $message;
+    /** @var string */
+    public $recipient;
+
+    /** @var string */
+    public $text;
 
     /**
      * @param Queue\Queue $queue which pushed and is handling the job
@@ -34,17 +35,19 @@ class Job extends base\BaseObject implements queue\JobInterface
         /** @var Delivery\ServiceInterface $service */
         $service = di\Instance::ensure($this->service, Delivery\ServiceInterface::class);
 
-        if (!$this->message instanceof Delivery\MessageInterface) {
-            throw new base\InvalidConfigException(
-                "Message have to implement " . Delivery\MessageInterface::class
-            );
+        if (!is_string($this->recipient)) {
+            throw new base\InvalidConfigException("Recipient has to be be a string");
+        }
+        if (!is_string($this->text)) {
+            throw new base\InvalidConfigException("Text has to be be a string");
         }
 
-        $service->send($this->message);
+        $message = new Delivery\Message($this->text, $this->recipient);
+        $service->send($message);
     }
 
     public function __sleep(): array
     {
-        return ['service', 'message'];
+        return ['service', 'recipient', 'text',];
     }
 }

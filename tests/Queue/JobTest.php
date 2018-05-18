@@ -17,7 +17,7 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
         $job = new Delivery\Yii2\Queue\Job();
 
         $this->assertEquals(
-            ['service', 'message',],
+            ['service', 'recipient', 'text',],
             $job->__sleep()
         );
     }
@@ -32,7 +32,8 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
 
         $job = new Delivery\Yii2\Queue\Job([
             'service' => $service,
-            'message' => $message,
+            'text' => $message->getText(),
+            'recipient' => $message->getRecipient(),
         ]);
 
         $job->execute('queue');
@@ -44,14 +45,56 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
 
     /**
      * @expectedException \yii\base\InvalidConfigException
-     * @expectedExceptionMessage Message have to implement Wearesho\Delivery\MessageInterface
+     * @expectedExceptionMessage Recipient has to be be a string
      */
-    public function testInvalidMessage(): void
+    public function testInvalidRecipient(): void
     {
         $service = new Delivery\ServiceMock();
         $job = new Delivery\Yii2\Queue\Job([
             'service' => $service,
-            'message' => $service
+            'recipient' => [],
+        ]);
+        $job->execute('queue');
+    }
+
+    /**
+     * @expectedException \yii\base\InvalidConfigException
+     * @expectedExceptionMessage Recipient has to be be a string
+     */
+    public function testEmptyRecipient(): void
+    {
+        $service = new Delivery\ServiceMock();
+        $job = new Delivery\Yii2\Queue\Job([
+            'service' => $service,
+        ]);
+        $job->execute('queue');
+    }
+
+    /**
+     * @expectedException \yii\base\InvalidConfigException
+     * @expectedExceptionMessage Text has to be be a string
+     */
+    public function testInvalidText(): void
+    {
+        $service = new Delivery\ServiceMock();
+        $job = new Delivery\Yii2\Queue\Job([
+            'service' => $service,
+            'recipient' => 'string',
+            'text' => [],
+        ]);
+        $job->execute('queue');
+    }
+
+    /**
+     * @expectedException \yii\base\InvalidConfigException
+     * @expectedExceptionMessage Text has to be be a string
+     */
+    public function testEmptyText(): void
+    {
+        $service = new Delivery\ServiceMock();
+        $job = new Delivery\Yii2\Queue\Job([
+            'service' => $service,
+            'recipient' => 'string',
         ]);
         $job->execute('queue');
     }
