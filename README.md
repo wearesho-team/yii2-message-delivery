@@ -53,7 +53,36 @@ return [
     ],
 ];
 ```
-*Note: recipient and text will be saved when job is created*
+*Note: messages sent using Queue\Service have to correct work with serialize() and unserialize().
+See yii2-queue for details*
+
+### Switch
+You can configure few delivery services, and choose one of them using environment variable.
+```php
+<?php
+
+use Wearesho\Delivery;
+use App;
+
+$service = new Delivery\Yii2\SwitchService([
+    'environmentKeyPrefix' => 'DELIVERY_', // by default,
+    'services' => [
+        'default' => [
+            'class' => Delivery\ServiceMock::class,
+        ],
+        'production' => [
+            'class' => App\Delivery\Service::class, // some Delivery\ServiceInterface implementation
+        ],
+    ],
+]);
+
+putenv('DELIVERY_SERVICE'); // clean environment
+$message = new Delivery\Message('text', 'recipient');
+$service->send($message); // default service will be used if no environment variable set
+putenv('DELIVERY_SERVICE=production');
+$service->send($message); // production service will be used if it was configured
+
+```
 
 ## Authors
 - [Alexander <horat1us> Letnikow](mailto:reclamme@gmail.com)
