@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f8677afbb371f19e95e124f895f3b0b0",
+    "content-hash": "dc32447ba7008c463472807a244737f3",
     "packages": [
         {
             "name": "bower-asset/inputmask",
@@ -535,16 +535,16 @@
         },
         {
             "name": "wearesho-team/message-delivery",
-            "version": "1.4.0",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wearesho-team/message-delivery.git",
-                "reference": "5686f6ca01fc69ae7a163b5f699014ce42917fb9"
+                "reference": "b9d79a8da6f9385852f070607aad3236aa7ce4c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wearesho-team/message-delivery/zipball/5686f6ca01fc69ae7a163b5f699014ce42917fb9",
-                "reference": "5686f6ca01fc69ae7a163b5f699014ce42917fb9",
+                "url": "https://api.github.com/repos/wearesho-team/message-delivery/zipball/b9d79a8da6f9385852f070607aad3236aa7ce4c4",
+                "reference": "b9d79a8da6f9385852f070607aad3236aa7ce4c4",
                 "shasum": ""
             },
             "require": {
@@ -571,7 +571,7 @@
                 }
             ],
             "description": "Message Delivery Interfaces",
-            "time": "2018-05-20T17:58:22+00:00"
+            "time": "2018-05-21T09:59:54+00:00"
         },
         {
             "name": "yiisoft/yii2",
