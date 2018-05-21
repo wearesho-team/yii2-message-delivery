@@ -5,7 +5,6 @@ namespace Wearesho\Delivery\Yii2\Tests;
 use PHPUnit\Framework\TestCase;
 use Wearesho\Delivery;
 
-
 /**
  * Class RepositoryServiceTest
  * @package Wearesho\Delivery\Yii2\Tests
