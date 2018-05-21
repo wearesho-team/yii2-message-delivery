@@ -57,6 +57,10 @@ class Service extends base\BaseObject implements Delivery\ServiceInterface
         $job->recipient = $message->getRecipient();
         $job->text = $message->getText();
 
+        if ($message instanceof Delivery\ContainsSenderName) {
+            $job->senderName = $message->getSenderName();
+        }
+
         $this->queue->push($job);
     }
 }

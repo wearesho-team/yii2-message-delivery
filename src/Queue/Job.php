@@ -25,6 +25,9 @@ class Job extends base\BaseObject implements queue\JobInterface
     /** @var string */
     public $text;
 
+    /** @var string */
+    public $senderName;
+
     /**
      * @param Queue\Queue $queue which pushed and is handling the job
      * @throws base\InvalidConfigException
@@ -42,7 +45,10 @@ class Job extends base\BaseObject implements queue\JobInterface
             throw new base\InvalidConfigException("Text has to be be a string");
         }
 
-        $message = new Delivery\Message($this->text, $this->recipient);
+        $message = empty($this->senderName)
+            ? new Delivery\Message($this->text, $this->recipient)
+            : new Delivery\Yii2\MessageWithSender($this->text, $this->recipient, $this->senderName);
+
         $service->send($message);
     }
 
