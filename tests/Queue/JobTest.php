@@ -17,7 +17,7 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
         $job = new Delivery\Yii2\Queue\Job();
 
         $this->assertEquals(
-            ['service', 'recipient', 'text',],
+            ['service', 'recipient', 'text', 'senderName',],
             $job->__sleep()
         );
     }
@@ -41,6 +41,7 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
         $this->assertTrue(
             $repository->isSent($message)
         );
+
     }
 
     /**
@@ -97,5 +98,26 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
             'recipient' => 'string',
         ]);
         $job->execute('queue');
+    }
+
+    public function testSendWithSender(): void
+    {
+        $text = 'Test text';
+        $recipient = '380000000001';
+        $senderName = 'Custom sender name';
+
+        $service = new Delivery\ServiceMock();
+        $repository = new Delivery\MemoryRepository();
+        $service->setRepository($repository);
+
+        $job = new Delivery\Yii2\Queue\Job([
+            'service' => $service,
+            'text' => $text,
+            'recipient' => $recipient,
+            'senderName' => $senderName,
+        ]);
+
+        $job->execute('queue');
+        $this->assertInstanceOf(Delivery\ContainsSenderName::class, $job->getMessage());
     }
 }
