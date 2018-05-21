@@ -45,15 +45,18 @@ class Job extends base\BaseObject implements queue\JobInterface
             throw new base\InvalidConfigException("Text has to be be a string");
         }
 
-        $message = empty($this->senderName)
-            ? new Delivery\Message($this->text, $this->recipient)
-            : new Delivery\Yii2\MessageWithSender($this->text, $this->recipient, $this->senderName);
+        $service->send($this->getMessage());
+    }
 
-        $service->send($message);
+    public function getMessage(): Delivery\MessageInterface
+    {
+        return empty($this->senderName)
+            ? new Delivery\Message($this->text, $this->recipient)
+            : new Delivery\MessageWithSender($this->text, $this->recipient, $this->senderName);
     }
 
     public function __sleep(): array
     {
-        return ['service', 'recipient', 'text',];
+        return ['service', 'recipient', 'text', 'senderName',];
     }
 }

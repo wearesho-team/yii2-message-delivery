@@ -62,4 +62,29 @@ class ServiceTest extends Delivery\Yii2\Tests\AbstractTestCase
             $repository->isSent($message)
         );
     }
+
+    public function testCreateWithSender(): void
+    {
+        $repository = new Delivery\MemoryRepository();
+
+        $this->container->setSingleton(
+            Delivery\ServiceMock::class,
+            function () use ($repository): Delivery\ServiceMock {
+                return new Delivery\ServiceMock($repository);
+            }
+        );
+        $this->service->service = [
+            'class' => Delivery\ServiceMock::class,
+        ];
+
+        $message = new Delivery\MessageWithSender('text', 'recipient', 'sender');
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->service->send($message);
+        $this->queue->run();
+
+        /** @var Delivery\HistoryItem $item */
+        $item = $repository->getHistoryItem($message);
+        $this->assertEquals('sender', $item->getSenderName());
+    }
 }
