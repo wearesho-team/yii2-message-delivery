@@ -101,21 +101,21 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
 
     public function testSendWithSender(): void
     {
-        $text = 'Test text';
-        $recipient = '380000000001';
-        $senderName = 'Custom sender name';
-
-        $service = new Delivery\ServiceMock();
-        $repository = new Delivery\MemoryRepository();
-        $service->setRepository($repository);
-
         $job = new Delivery\Yii2\Queue\Job([
-            'service' => $service,
-            'text' => $text,
-            'recipient' => $recipient,
-            'senderName' => $senderName,
+            'text' => 'Test text',
+            'recipient' => '380000000001',
+            'senderName' => 'Custom sender name',
         ]);
 
         $this->assertInstanceOf(Delivery\ContainsSenderName::class, $job->getMessage());
+    }
+
+    public function testEmptySender(): void
+    {
+        $job = new Delivery\Yii2\Queue\Job([
+            'text' => 'text',
+            'recipient' => '380000000001',
+        ]);
+        $this->assertNotInstanceOf(Delivery\ContainsSenderName::class, $job->getMessage());
     }
 }
