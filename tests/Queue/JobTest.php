@@ -41,7 +41,6 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
         $this->assertTrue(
             $repository->isSent($message)
         );
-
     }
 
     /**
@@ -117,7 +116,6 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
             'senderName' => $senderName,
         ]);
 
-        $job->execute('queue');
         $this->assertInstanceOf(Delivery\ContainsSenderName::class, $job->getMessage());
     }
 }
