@@ -56,7 +56,7 @@ return [
 *Note: messages sent using Queue\Service have to correct work with serialize() and unserialize().
 See yii2-queue for details*
 
-### Switch
+### SwitchService
 You can configure few delivery services, and choose one of them using environment variable.
 ```php
 <?php
@@ -82,6 +82,24 @@ $service->send($message); // default service will be used if no environment vari
 putenv('DELIVERY_SERVICE=production');
 $service->send($message); // production service will be used if it was configured
 
+```
+
+### RepositoryService
+You can wrap any your service into RepositoryService, that has repository.
+If sending message in wrapped service did not throwed any exception message will be stored as sent.
+
+```php
+<?php
+
+use Wearesho\Delivery;
+use App;
+
+$service = new Delivery\Yii2\RepositoryService([
+    'service' => App\CustomService::class,
+    'repository' => Delivery\Yii2\Repository::class, // or your own implementation
+]);
+
+// do what you want using Delivery\ServiceInterface
 ```
 
 ## Authors
