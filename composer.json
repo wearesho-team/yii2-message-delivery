@@ -22,7 +22,7 @@
     "horat1us/environment-config": "^1.2",
     "horat1us/yii2-base": "^1.11",
     "nesbot/carbon": "^1.27",
-    "wearesho-team/message-delivery": "^1.3.3",
+    "wearesho-team/message-delivery": "^1.5.0",
     "yiisoft/yii2": "^2.0.15"
   },
   "autoload": {
