@@ -535,16 +535,16 @@
         },
         {
             "name": "wearesho-team/message-delivery",
-            "version": "1.3.3",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wearesho-team/message-delivery.git",
-                "reference": "2b746537ef24f087c463c229891f5f390dd27146"
+                "reference": "5686f6ca01fc69ae7a163b5f699014ce42917fb9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wearesho-team/message-delivery/zipball/2b746537ef24f087c463c229891f5f390dd27146",
-                "reference": "2b746537ef24f087c463c229891f5f390dd27146",
+                "url": "https://api.github.com/repos/wearesho-team/message-delivery/zipball/5686f6ca01fc69ae7a163b5f699014ce42917fb9",
+                "reference": "5686f6ca01fc69ae7a163b5f699014ce42917fb9",
                 "shasum": ""
             },
             "require": {
@@ -571,7 +571,7 @@
                 }
             ],
             "description": "Message Delivery Interfaces",
-            "time": "2018-05-12T14:52:53+00:00"
+            "time": "2018-05-20T17:58:22+00:00"
         },
         {
             "name": "yiisoft/yii2",
