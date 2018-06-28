@@ -61,6 +61,15 @@ class Bootstrap extends base\BaseObject implements base\BootstrapInterface
         }
         $application->controllerMap['migrate']['migrationNamespaces'][] =
             'Wearesho\\Delivery\\Yii2\\Migrations';
+
+        if (!array_key_exists('delivery', $application->controllerMap)) {
+            $application->controllerMap['delivery'] = [
+                'class' => Delivery\Yii2\Console\Controller::class,
+                'delivery' => [
+                    'class' => Delivery\ServiceInterface::class,
+                ],
+            ];
+        }
     }
 
     public function setAliases(base\Application $application): void
