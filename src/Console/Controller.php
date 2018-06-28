@@ -15,6 +15,27 @@ class Controller extends console\Controller
     /** @var string|array|Delivery\ServiceInterface definition */
     public $delivery;
 
+    /** @var string */
+    public $message = '';
+
+    public function options($actionID): array
+    {
+        $options = [
+            'message',
+        ];
+
+        return array_merge(parent::options($actionID), $options);
+    }
+
+    public function optionAliases(): array
+    {
+        $aliases = [
+            'm' => 'message',
+        ];
+
+        return array_merge(parent::optionAliases(), $aliases);
+    }
+
     /**
      * @param \yii\base\Action $action
      * @return bool
@@ -26,9 +47,9 @@ class Controller extends console\Controller
         return parent::beforeAction($action);
     }
 
-    public function actionSend(string $text, string $recipient): void
+    public function actionSend(string $recipient): void
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        $this->delivery->send(new Delivery\Message($text, $recipient));
+        $this->delivery->send(new Delivery\Message($this->message, $recipient));
     }
 }
