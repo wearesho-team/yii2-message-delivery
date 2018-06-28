@@ -26,9 +26,9 @@ class Controller extends console\Controller
         return parent::beforeAction($action);
     }
 
-    public function actionSend(string $message, string $text): void
+    public function actionSend(string $text, string $recipient): void
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        $this->delivery->send(new Delivery\Message($text, $message));
+        $this->delivery->send(new Delivery\Message($text, $recipient));
     }
 }
