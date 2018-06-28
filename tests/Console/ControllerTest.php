@@ -12,9 +12,6 @@ use Wearesho\Delivery;
  */
 class ControllerTest extends TestCase
 {
-    /** @var Delivery\ServiceMock */
-    protected $mock;
-
     /** @var Delivery\Yii2\Console\Controller */
     protected $controller;
 
@@ -29,7 +26,9 @@ class ControllerTest extends TestCase
                 new base\Module('default'),
             ],
             [
-                'delivery' => $this->mock,
+                'delivery' => [
+                    'class' => Delivery\ServiceMock::class,
+                ],
             ]
         );
     }
@@ -40,15 +39,29 @@ class ControllerTest extends TestCase
         $recipient = 'testRecipient';
 
         /** @noinspection PhpUnhandledExceptionInspection */
-        $this->controller->createAction('send')->runWithParams([
-            'text' => $text,
-            'recipient' => $recipient,
+        $this->controller->runAction('send', [
+            'message' => $text,
+            $recipient,
         ]);
 
-        $repository = $this->mock->getRepository();
+        /** @var Delivery\ServiceMock $delivery */
+        $delivery = $this->controller->delivery;
+        $this->assertInstanceOf(
+            Delivery\ServiceMock::class,
+            $delivery
+        );
+        $repository = $delivery->getRepository();
 
         $this->assertTrue(
             $repository->isSent(new Delivery\Message($text, $recipient))
         );
+    }
+
+    public function testOptionsAliases(): void
+    {
+        $aliases = $this->controller->optionAliases();
+        $this->assertArraySubset([
+            'm' => 'message',
+        ], $aliases);
     }
 }
