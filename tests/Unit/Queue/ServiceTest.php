@@ -1,13 +1,13 @@
 <?php
 
-namespace Wearesho\Delivery\Yii2\Tests\Queue;
+namespace Wearesho\Delivery\Yii2\Tests\Unit\Queue;
 
 use Wearesho\Delivery;
 use yii\queue;
 
 /**
  * Class ServiceTest
- * @package Wearesho\Delivery\Yii2\Tests\Queue
+ * @package Wearesho\Delivery\Yii2\Tests\Unit\Queue
  * @coversDefaultClass \Wearesho\Delivery\Yii2\Queue\Service
  */
 class ServiceTest extends Delivery\Yii2\Tests\TestCase

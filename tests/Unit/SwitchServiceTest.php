@@ -1,6 +1,6 @@
 <?php
 
-namespace Wearesho\Delivery\Yii2\Tests;
+namespace Wearesho\Delivery\Yii2\Tests\Unit;
 
 use yii\phpunit\TestCase;
 use yii\base;
@@ -8,7 +8,7 @@ use Wearesho\Delivery;
 
 /**
  * Class SwitchServiceTest
- * @package Wearesho\Delivery\Yii2\Tests
+ * @package Wearesho\Delivery\Yii2\Tests\Unit
  */
 class SwitchServiceTest extends TestCase
 {
@@ -35,14 +35,17 @@ class SwitchServiceTest extends TestCase
     public function testActiveService(): void
     {
         putenv('DELIVERY_SERVICE=0');
+        /** @noinspection PhpUnhandledExceptionInspection */
         $this->assertEquals($this->services[0], $this->switchService->getActiveService());
         putenv('DELIVERY_SERVICE=1');
+        /** @noinspection PhpUnhandledExceptionInspection */
         $this->assertEquals($this->services[1], $this->switchService->getActiveService());
         putenv('DELIVERY_SERVICE');
 
         $this->expectException(base\InvalidConfigException::class);
         $this->expectExceptionMessage('Service default does not configured.');
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $this->switchService->getActiveService();
     }
 
@@ -51,6 +54,7 @@ class SwitchServiceTest extends TestCase
         putenv('DELIVERY_SERVICE=0');
 
         $message = new Delivery\Message('text', 'recipient');
+        /** @noinspection PhpUnhandledExceptionInspection */
         $this->switchService->send($message);
 
         $this->assertTrue($this->services[0]->getRepository()->isSent($message));
@@ -59,6 +63,7 @@ class SwitchServiceTest extends TestCase
         $this->expectException(Delivery\Exception::class);
         $this->expectExceptionMessage('Error while instantiating delivery service.');
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $this->switchService->send($message);
     }
 }

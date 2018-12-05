@@ -1,13 +1,13 @@
 <?php
 
-namespace Wearesho\Delivery\Yii2\Tests;
+namespace Wearesho\Delivery\Yii2\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Wearesho\Delivery;
 
 /**
  * Class RepositoryServiceTest
- * @package Wearesho\Delivery\Yii2\Tests
+ * @package Wearesho\Delivery\Yii2\Tests\Unit
  */
 class RepositoryServiceTest extends TestCase
 {
@@ -26,6 +26,7 @@ class RepositoryServiceTest extends TestCase
     public function testSuccessfulSent(): void
     {
         $message = new Delivery\Message('text', 'recipient');
+        /** @noinspection PhpUnhandledExceptionInspection */
         $this->service->send($message);
         $this->assertTrue($this->service->repository->isSent($message));
     }
@@ -46,6 +47,7 @@ class RepositoryServiceTest extends TestCase
         };
 
         try {
+            /** @noinspection PhpUnhandledExceptionInspection */
             $this->service->send($message);
         } catch (Delivery\Exception $exception) {
             $this->assertFalse($this->service->repository->isSent($message));
