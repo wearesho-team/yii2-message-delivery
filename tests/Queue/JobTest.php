@@ -10,7 +10,7 @@ use Wearesho\Delivery;
  * @internal
  * @coversDefaultClass \Wearesho\Delivery\Yii2\Queue\Job
  */
-class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
+class JobTest extends Delivery\Yii2\Tests\TestCase
 {
     public function testSleep(): void
     {

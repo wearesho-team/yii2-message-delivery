@@ -10,7 +10,7 @@ use yii\queue;
  * @package Wearesho\Delivery\Yii2\Tests\Queue
  * @coversDefaultClass \Wearesho\Delivery\Yii2\Queue\Service
  */
-class ServiceTest extends Delivery\Yii2\Tests\AbstractTestCase
+class ServiceTest extends Delivery\Yii2\Tests\TestCase
 {
     /** @var Delivery\Yii2\Queue\Service */
     protected $service;
