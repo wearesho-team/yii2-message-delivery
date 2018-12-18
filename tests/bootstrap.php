@@ -1,17 +1,10 @@
 <?php
 
-// phpcs:disable
-
 use Dotenv\Dotenv;
 
-require_once(dirname(__DIR__) . '/vendor/autoload.php');
-require_once(dirname(__DIR__) . '/vendor/yiisoft/yii2/Yii.php');
-
-$dotEnv = new Dotenv(dirname(__DIR__));
-$dotEnv->load();
-
-defined('YII_DEBUG') || define("YII_DEBUG", true);
-defined('YII_ENV') || define("YII_ENV", "test");
+if (file_exists(dirname(__DIR__) . DIRECTORY_SEPARATOR . '.env')) {
+    (new Dotenv(dirname(__DIR__)))->load();
+}
 
 getenv('DB_PATH') || putenv("DB_PATH=" . __DIR__ . '/db.sqlite');
 

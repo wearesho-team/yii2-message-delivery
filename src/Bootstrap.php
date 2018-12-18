@@ -2,6 +2,7 @@
 
 namespace Wearesho\Delivery\Yii2;
 
+use Horat1us\Yii\Traits\BootstrapMigrations;
 use yii\base;
 use yii\console;
 use yii\di;
@@ -13,6 +14,8 @@ use Wearesho\Delivery;
  */
 class Bootstrap extends base\BaseObject implements base\BootstrapInterface
 {
+    use BootstrapMigrations;
+
     /** @var array|string|Delivery\ServiceInterface definition */
     public $service;
 
@@ -25,7 +28,7 @@ class Bootstrap extends base\BaseObject implements base\BootstrapInterface
         $this->configureContainer(\Yii::$container);
 
         if ($app instanceof console\Application) {
-            $this->addMigrations($app);
+            $this->appendMigrations($app, "Wearesho\\Delivery\\Yii2\\Migrations");
         }
     }
 
@@ -49,26 +52,6 @@ class Bootstrap extends base\BaseObject implements base\BootstrapInterface
 
         if (!$serviceConfigured) {
             $container->set(Delivery\ServiceInterface::class, $this->service);
-        }
-    }
-
-    public function addMigrations(console\Application $application): void
-    {
-        if (!array_key_exists('migrate', $application->controllerMap)) {
-            $application->controllerMap['migrate'] = [
-                'class' => console\controllers\MigrateController::class,
-            ];
-        }
-        $application->controllerMap['migrate']['migrationNamespaces'][] =
-            'Wearesho\\Delivery\\Yii2\\Migrations';
-
-        if (!array_key_exists('delivery', $application->controllerMap)) {
-            $application->controllerMap['delivery'] = [
-                'class' => Delivery\Yii2\Console\Controller::class,
-                'delivery' => [
-                    'class' => Delivery\ServiceInterface::class,
-                ],
-            ];
         }
     }
 

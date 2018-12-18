@@ -9,7 +9,7 @@ use Wearesho\Delivery;
  * @package Wearesho\Delivery\Yii2\Tests\Unit
  * @internal
  */
-class RepositoryTest extends Delivery\Yii2\Tests\AbstractTestCase
+class RepositoryTest extends Delivery\Yii2\Tests\TestCase
 {
     use Delivery\Test\RepositoryTest;
 

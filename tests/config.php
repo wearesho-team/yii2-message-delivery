@@ -8,7 +8,8 @@ $localConfig = __DIR__ . DIRECTORY_SEPARATOR . 'config-local.php';
 $host = getenv('DB_HOST');
 $name = getenv("DB_NAME");
 $port = getenv("DB_PORT");
-$dsn = "pgsql:host={$host};dbname={$name};port={$port}";
+$type = getenv("DB_TYPE");
+$dsn = "{$type}:host={$host};dbname={$name};port={$port}";
 
 $config = [
     'id' => 'bobra-documents',

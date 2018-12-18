@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f8677afbb371f19e95e124f895f3b0b0",
+    "content-hash": "3f93877487e8ba7d928903345925984e",
     "packages": [
         {
             "name": "bower-asset/inputmask",
@@ -311,16 +311,16 @@
         },
         {
             "name": "horat1us/yii2-base",
-            "version": "1.11.0",
+            "version": "1.14.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Horat1us/yii2-base.git",
-                "reference": "e39fda96e46330e9551dcc3bc43e0f9babeeed41"
+                "reference": "ad7958188eea29bebec2ec0512b14c00bc7fda82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Horat1us/yii2-base/zipball/e39fda96e46330e9551dcc3bc43e0f9babeeed41",
-                "reference": "e39fda96e46330e9551dcc3bc43e0f9babeeed41",
+                "url": "https://api.github.com/repos/Horat1us/yii2-base/zipball/ad7958188eea29bebec2ec0512b14c00bc7fda82",
+                "reference": "ad7958188eea29bebec2ec0512b14c00bc7fda82",
                 "shasum": ""
             },
             "require": {
@@ -330,7 +330,8 @@
             },
             "require-dev": {
                 "fzaninotto/faker": "^1.7",
-                "phpunit/phpunit": "^6.2"
+                "phpunit/phpunit": "^6.2",
+                "squizlabs/php_codesniffer": "^3.3"
             },
             "type": "library",
             "autoload": {
@@ -356,7 +357,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2018-05-08T13:14:32+00:00"
+            "time": "2018-10-30T13:03:02+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -2095,16 +2096,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.2.3",
+            "version": "3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "4842476c434e375f9d3182ff7b89059583aa8b27"
+                "reference": "6ad28354c04b364c3c71a34e4a18b629cc3b231e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/4842476c434e375f9d3182ff7b89059583aa8b27",
-                "reference": "4842476c434e375f9d3182ff7b89059583aa8b27",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/6ad28354c04b364c3c71a34e4a18b629cc3b231e",
+                "reference": "6ad28354c04b364c3c71a34e4a18b629cc3b231e",
                 "shasum": ""
             },
             "require": {
@@ -2142,7 +2143,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2018-02-20T21:35:23+00:00"
+            "time": "2018-09-23T23:08:17+00:00"
         },
         {
             "name": "symfony/process",

@@ -1,16 +1,16 @@
 <?php
 
-namespace Wearesho\Delivery\Yii2\Tests\Queue;
+namespace Wearesho\Delivery\Yii2\Tests\Unit\Queue;
 
 use Wearesho\Delivery;
 
 /**
  * Class JobTest
- * @package Wearesho\Delivery\Yii2\Tests\Queue
+ * @package Wearesho\Delivery\Yii2\Tests\Unit\Queue
  * @internal
  * @coversDefaultClass \Wearesho\Delivery\Yii2\Queue\Job
  */
-class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
+class JobTest extends Delivery\Yii2\Tests\TestCase
 {
     public function testSleep(): void
     {
@@ -36,6 +36,7 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
             'recipient' => $message->getRecipient(),
         ]);
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $job->execute('queue');
 
         $this->assertTrue(
@@ -54,6 +55,7 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
             'service' => $service,
             'recipient' => [],
         ]);
+        /** @noinspection PhpUnhandledExceptionInspection */
         $job->execute('queue');
     }
 
@@ -67,6 +69,7 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
         $job = new Delivery\Yii2\Queue\Job([
             'service' => $service,
         ]);
+        /** @noinspection PhpUnhandledExceptionInspection */
         $job->execute('queue');
     }
 
@@ -82,6 +85,7 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
             'recipient' => 'string',
             'text' => [],
         ]);
+        /** @noinspection PhpUnhandledExceptionInspection */
         $job->execute('queue');
     }
 
@@ -96,6 +100,7 @@ class JobTest extends Delivery\Yii2\Tests\AbstractTestCase
             'service' => $service,
             'recipient' => 'string',
         ]);
+        /** @noinspection PhpUnhandledExceptionInspection */
         $job->execute('queue');
     }
 

@@ -1,16 +1,15 @@
 <?php
 
-namespace Wearesho\Delivery\Yii2\Tests\Console;
+namespace Wearesho\Delivery\Yii2\Tests\Unit\Console;
 
 use yii\base;
-use yii\phpunit\TestCase;
 use Wearesho\Delivery;
 
 /**
  * Class ControllerTest
- * @package Wearesho\Delivery\Yii2\Tests\Console
+ * @package Wearesho\Delivery\Yii2\Tests\Unit\Console
  */
-class ControllerTest extends TestCase
+class ControllerTest extends Delivery\Yii2\Tests\TestCase
 {
     /** @var Delivery\Yii2\Console\Controller */
     protected $controller;
