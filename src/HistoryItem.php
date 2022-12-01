@@ -7,7 +7,6 @@ namespace Wearesho\Delivery\Yii2;
 use Carbon\Carbon;
 use Horat1us\Yii\CarbonBehavior;
 use Wearesho\Delivery;
-
 use yii\db;
 
 /**

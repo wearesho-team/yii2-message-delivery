@@ -20,8 +20,8 @@ class SwitchServiceTest extends TestCase
         parent::setUp();
 
         for ($i = 0; $i < 2; $i++) {
-            $this->services[] = $service = new Delivery\ServiceMock;
-            $service->setRepository(new Delivery\MemoryRepository);
+            $this->services[] = $service = new Delivery\ServiceMock();
+            $service->setRepository(new Delivery\MemoryRepository());
         }
 
         $this->switchService = new Delivery\Yii2\SwitchService([

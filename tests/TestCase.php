@@ -60,7 +60,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             }
             $class = $this->getMigrationNamespace() . '\\' . str_replace('.php', '', $file->getFilename());
 
-            $migration = new $class;
+            $migration = new $class();
             if (!$migration instanceof db\Migration) {
                 continue;
             }
@@ -93,7 +93,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     {
         $composerJsonPath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'composer.json';
         $packageInfo = json_decode(
-            file_get_contents($composerJsonPath), true, 16, JSON_THROW_ON_ERROR
+            file_get_contents($composerJsonPath),
+            true,
+            16,
+            JSON_THROW_ON_ERROR
         );
         return $packageInfo['name'];
     }
