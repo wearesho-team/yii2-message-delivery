@@ -55,7 +55,7 @@
     "test-pgsql": "./vendor/bin/phpunit --configuration phpunit.pgsql.xml",
     "test": "composer run-script test-mysql && composer run-script test-pgsql"
   },
-  "suggests": {
+  "suggest": {
     "yiisoft/yii2-queue": "Need for Delivery\\Yii\\Queue\\Service"
   }
 }
