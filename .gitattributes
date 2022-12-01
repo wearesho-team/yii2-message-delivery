@@ -6,4 +6,7 @@
 /phpunit.xml export-ignore
 /changelog.md export-ignore
 /README.md export-ignore
-/yii
+/yii export-ignore
+/composer.lock export-ignore
+/phpunit.pgsql.xml export-ignore
+/docker-compose.yml export-ignore
