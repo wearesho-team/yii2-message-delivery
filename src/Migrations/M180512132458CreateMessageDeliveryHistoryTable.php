@@ -1,17 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wearesho\Delivery\Yii2\Migrations;
 
 use yii\db\Migration;
 
-/**
- * Class M180512132458CreateMessageDeliveryHistoryTable
- */
 class M180512132458CreateMessageDeliveryHistoryTable extends Migration
 {
-    /**
-     * {@inheritdoc}
-     */
     public function safeUp(): void
     {
         $timestamp = $this->timestamp()->notNull();
@@ -32,9 +28,6 @@ class M180512132458CreateMessageDeliveryHistoryTable extends Migration
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function safeDown(): void
     {
         $this->dropTable('message_delivery_history');

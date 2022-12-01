@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wearesho\Delivery\Yii2;
 
 use yii\base;
@@ -7,15 +9,11 @@ use yii\di;
 use Wearesho\Delivery;
 use Horat1us\Environment;
 
-/**
- * Class SwitchService
- * @package Wearesho\Delivery\Yii2
- */
 class SwitchService extends base\BaseObject implements Delivery\ServiceInterface
 {
     use Environment\ConfigTrait;
 
-    public $environmentKeyPrefix = 'DELIVERY_';
+    public string $environmentKeyPrefix = 'DELIVERY_';
 
     /** @var string[]|array[]|Delivery\ServiceInterface[] definitions */
     public $services;

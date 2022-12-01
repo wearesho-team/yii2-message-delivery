@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wearesho\Delivery\Yii2\Tests\Unit\Queue;
 
 use Wearesho\Delivery;
+use yii\base;
+use yii\queue\Queue;
 
 /**
- * Class JobTest
- * @package Wearesho\Delivery\Yii2\Tests\Unit\Queue
- * @internal
  * @coversDefaultClass \Wearesho\Delivery\Yii2\Queue\Job
  */
 class JobTest extends Delivery\Yii2\Tests\TestCase
@@ -37,71 +38,11 @@ class JobTest extends Delivery\Yii2\Tests\TestCase
         ]);
 
         /** @noinspection PhpUnhandledExceptionInspection */
-        $job->execute('queue');
+        $job->execute($this->createMock(Queue::class));
 
         $this->assertTrue(
             $repository->isSent($message)
         );
-    }
-
-    /**
-     * @expectedException \yii\base\InvalidConfigException
-     * @expectedExceptionMessage Recipient has to be be a string
-     */
-    public function testInvalidRecipient(): void
-    {
-        $service = new Delivery\ServiceMock();
-        $job = new Delivery\Yii2\Queue\Job([
-            'service' => $service,
-            'recipient' => [],
-        ]);
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $job->execute('queue');
-    }
-
-    /**
-     * @expectedException \yii\base\InvalidConfigException
-     * @expectedExceptionMessage Recipient has to be be a string
-     */
-    public function testEmptyRecipient(): void
-    {
-        $service = new Delivery\ServiceMock();
-        $job = new Delivery\Yii2\Queue\Job([
-            'service' => $service,
-        ]);
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $job->execute('queue');
-    }
-
-    /**
-     * @expectedException \yii\base\InvalidConfigException
-     * @expectedExceptionMessage Text has to be be a string
-     */
-    public function testInvalidText(): void
-    {
-        $service = new Delivery\ServiceMock();
-        $job = new Delivery\Yii2\Queue\Job([
-            'service' => $service,
-            'recipient' => 'string',
-            'text' => [],
-        ]);
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $job->execute('queue');
-    }
-
-    /**
-     * @expectedException \yii\base\InvalidConfigException
-     * @expectedExceptionMessage Text has to be be a string
-     */
-    public function testEmptyText(): void
-    {
-        $service = new Delivery\ServiceMock();
-        $job = new Delivery\Yii2\Queue\Job([
-            'service' => $service,
-            'recipient' => 'string',
-        ]);
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $job->execute('queue');
     }
 
     public function testSendWithSender(): void

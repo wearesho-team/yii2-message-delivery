@@ -1,14 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wearesho\Delivery\Yii2\Tests\Unit;
 
 use Wearesho\Delivery;
 
-/**
- * Class RepositoryTest
- * @package Wearesho\Delivery\Yii2\Tests\Unit
- * @internal
- */
 class RepositoryTest extends Delivery\Yii2\Tests\TestCase
 {
     use Delivery\Test\RepositoryTest;

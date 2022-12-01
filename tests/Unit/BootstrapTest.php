@@ -1,26 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wearesho\Delivery\Yii2\Tests\Unit;
 
 use Wearesho\Delivery;
 
-/**
- * Class BootstrapTest
- * @package Wearesho\Delivery\Yii2\Tests\Unit
- */
 class BootstrapTest extends Delivery\Yii2\Tests\TestCase
 {
-    protected $aliases;
+    protected array $aliases;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-
 
         $this->aliases = \Yii::$aliases;
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -30,10 +27,10 @@ class BootstrapTest extends Delivery\Yii2\Tests\TestCase
     public function testBootstrap(): void
     {
         $bootstrap = new Delivery\Yii2\Bootstrap();
-        $bootstrap->bootstrap($this->app);
+        $bootstrap->bootstrap(\Yii::$app);
         $this->assertEquals(
-            \Yii::getAlias('@vendor/wearesho-team/yii2-message-delivery/src'),
-            \Yii::getAlias('@Wearesho/Delivery/Yii2')
+            dirname(dirname(__DIR__)) . '/src/Migrations',
+            \Yii::getAlias('@Wearesho/Delivery/Yii2/Migrations')
         );
     }
 
@@ -42,10 +39,9 @@ class BootstrapTest extends Delivery\Yii2\Tests\TestCase
         \Yii::$container->set(Delivery\ServiceInterface::class, Delivery\ServiceMock::class);
         $bootstrap = new Delivery\Yii2\Bootstrap();
         $bootstrap->service = new Delivery\ServiceMock();
-        $bootstrap->bootstrap($this->app);
-        $this->assertEquals(
-            \Yii::getAlias('@vendor/wearesho-team/yii2-message-delivery/src'),
-            \Yii::getAlias('@Wearesho/Delivery/Yii2')
-        );
+        $bootstrap->bootstrap(\Yii::$app);
+
+        $service = \Yii::$container->get(Delivery\ServiceInterface::class);
+        $this->assertInstanceOf(Delivery\ServiceMock::class, $service);
     }
 }

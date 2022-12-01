@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wearesho\Delivery\Yii2\Queue;
 
 use yii\base;
@@ -7,26 +9,22 @@ use yii\queue;
 use yii\di;
 use Wearesho\Delivery;
 
-/**
- * Class Job
- * @package Wearesho\Delivery\Yii2\Queue
- */
 class Job extends base\BaseObject implements queue\JobInterface
 {
     /**
      * @see Delivery\ServiceInterface
-     * @var array array or string definition
+     * @var array|string array or string definition
      */
     public $service;
 
     /** @var string */
-    public $recipient;
+    public string $recipient;
 
     /** @var string */
-    public $text;
+    public string $text;
 
     /** @var string */
-    public $senderName;
+    public string $senderName;
 
     /**
      * @param Queue\Queue $queue which pushed and is handling the job
@@ -37,13 +35,6 @@ class Job extends base\BaseObject implements queue\JobInterface
     {
         /** @var Delivery\ServiceInterface $service */
         $service = di\Instance::ensure($this->service, Delivery\ServiceInterface::class);
-
-        if (!is_string($this->recipient)) {
-            throw new base\InvalidConfigException("Recipient has to be be a string");
-        }
-        if (!is_string($this->text)) {
-            throw new base\InvalidConfigException("Text has to be be a string");
-        }
 
         $service->send($this->getMessage());
     }

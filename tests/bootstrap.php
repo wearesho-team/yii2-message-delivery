@@ -1,23 +1,10 @@
 <?php
 
-use Dotenv\Dotenv;
+// phpcs:disable
 
-if (file_exists(dirname(__DIR__) . DIRECTORY_SEPARATOR . '.env')) {
-    (new Dotenv(dirname(__DIR__)))->load();
-}
+require_once(dirname(__DIR__) . '/vendor/autoload.php');
 
-getenv('DB_PATH') || putenv("DB_PATH=" . __DIR__ . '/db.sqlite');
+defined('YII_DEBUG') || define("YII_DEBUG", true);
+defined('YII_ENV') || define("YII_ENV", "test");
 
-
-\Yii::setAlias(
-    '@Wearesho/Delivery/Yii2',
-    dirname(__DIR__) . DIRECTORY_SEPARATOR . 'src'
-);
-
-Yii::setAlias('@runtime', dirname(__DIR__) . DIRECTORY_SEPARATOR . 'runtime');
-
-\Yii::setAlias('@configFile', __DIR__ . DIRECTORY_SEPARATOR . 'config.php');
-
-Yii::setAlias('@fileStorage', Yii::getAlias('@runtime'));
-
-Yii::setAlias('@output', __DIR__ . DIRECTORY_SEPARATOR . 'output');
+require_once(dirname(__DIR__) . '/vendor/yiisoft/yii2/Yii.php');

@@ -4,6 +4,7 @@ namespace Wearesho\Delivery\Yii2\Tests\Unit\Queue;
 
 use Wearesho\Delivery;
 use yii\queue;
+use yii\base;
 
 /**
  * Class ServiceTest
@@ -27,14 +28,13 @@ class ServiceTest extends Delivery\Yii2\Tests\TestCase
         ]);
     }
 
-    /**
-     * @expectedException \yii\base\InvalidConfigException
-     * @expectedExceptionMessage You must configure service as string or array before usage
-     */
     public function testInvalidService(): void
     {
         $subService = new Delivery\ServiceMock();
         $this->service->service = $subService;
+
+        $this->expectException(base\InvalidConfigException::class);
+        $this->expectExceptionMessage('You must configure service as string or array before usage');
         $this->service->send(new Delivery\Message('text', 'recipient'));
     }
 
@@ -42,7 +42,7 @@ class ServiceTest extends Delivery\Yii2\Tests\TestCase
     {
         $repository = new Delivery\MemoryRepository();
 
-        $this->container->setSingleton(
+        \Yii::$container->setSingleton(
             Delivery\ServiceMock::class,
             function () use ($repository): Delivery\ServiceMock {
                 return new Delivery\ServiceMock($repository);
@@ -67,7 +67,7 @@ class ServiceTest extends Delivery\Yii2\Tests\TestCase
     {
         $repository = new Delivery\MemoryRepository();
 
-        $this->container->setSingleton(
+        \Yii::$container->setSingleton(
             Delivery\ServiceMock::class,
             function () use ($repository): Delivery\ServiceMock {
                 return new Delivery\ServiceMock($repository);

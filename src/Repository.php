@@ -1,20 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wearesho\Delivery\Yii2;
 
-use Horat1us\Yii\Exceptions\ModelException;
+use Horat1us\Yii\Validation;
 use Wearesho\Delivery;
 
-/**
- * Class Repository
- * @package Wearesho\Delivery\Yii2
- */
 class Repository implements Delivery\RepositoryInterface
 {
     use Delivery\RepositoryTrait;
 
     public function getHistoryItem(Delivery\MessageInterface $message): ?Delivery\HistoryItemInterface
     {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return HistoryItem::find()
             ->orderBy(['message_delivery_history.id' => SORT_DESC])
             ->andWhereMessage($message)
@@ -23,7 +22,7 @@ class Repository implements Delivery\RepositoryInterface
 
     /**
      * @param Delivery\HistoryItemInterface $item
-     * @throws \Horat1us\Yii\Interfaces\ModelExceptionInterface
+     * @throws Validation\Failure
      */
     public function save(Delivery\HistoryItemInterface $item): void
     {
@@ -34,6 +33,6 @@ class Repository implements Delivery\RepositoryInterface
             'sender' => $item->getSender(),
         ]);
 
-        ModelException::saveOrThrow($record);
+        Validation\Exception::saveOrThrow($record);
     }
 }

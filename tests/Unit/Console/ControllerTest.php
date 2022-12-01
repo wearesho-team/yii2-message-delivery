@@ -1,24 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wearesho\Delivery\Yii2\Tests\Unit\Console;
 
 use yii\base;
 use Wearesho\Delivery;
 
-/**
- * Class ControllerTest
- * @package Wearesho\Delivery\Yii2\Tests\Unit\Console
- */
 class ControllerTest extends Delivery\Yii2\Tests\TestCase
 {
-    /** @var Delivery\Yii2\Console\Controller */
-    protected $controller;
+    protected Delivery\Yii2\Console\Controller $controller;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->mock = new Delivery\ServiceMock();
-        $this->controller = $this->container->get(
+        $this->controller = \Yii::$container->get(
             Delivery\Yii2\Console\Controller::class,
             [
                 'delivery',
@@ -59,8 +56,7 @@ class ControllerTest extends Delivery\Yii2\Tests\TestCase
     public function testOptionsAliases(): void
     {
         $aliases = $this->controller->optionAliases();
-        $this->assertArraySubset([
-            'm' => 'message',
-        ], $aliases);
+        $this->assertArrayHasKey('m', $aliases);
+        $this->assertEquals('message', $aliases['m']);
     }
 }
