@@ -29,11 +29,11 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
       pgsql:
         image: postgres:14.1-alpine
-        environment:
-          - POSTGRES_USER=yii2_message_delivery
-          - POSTGRES_PASSWORD=yii2_message_delivery
+        env:
+          POSTGRES_USER: yii2_message_delivery
+          POSTGRES_PASSWORD: yii2_message_delivery
         ports:
-          - '5510:5432'
+          - 5510:5432
 
     steps:
       - uses: actions/checkout@v2
