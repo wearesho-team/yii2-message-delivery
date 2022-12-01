@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wearesho\Delivery\Yii2\Queue;
 
 use Wearesho\Delivery;
@@ -7,10 +9,6 @@ use yii\base;
 use yii\di;
 use yii\queue\Queue;
 
-/**
- * Class Service
- * @package Wearesho\Delivery\Yii2\Queue
- */
 class Service extends base\BaseObject implements Delivery\ServiceInterface
 {
     /** @var string|array|Queue */

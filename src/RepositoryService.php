@@ -1,15 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wearesho\Delivery\Yii2;
 
 use Wearesho\Delivery;
 use yii\base;
 use yii\di;
 
-/**
- * Class RepositoryService
- * @package Wearesho\Delivery\Yii2
- */
 class RepositoryService extends base\BaseObject implements Delivery\ServiceInterface
 {
     /** @var array|string|Delivery\ServiceInterface definition */

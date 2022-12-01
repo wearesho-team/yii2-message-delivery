@@ -1,34 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wearesho\Delivery\Yii2;
 
-use Horat1us\Yii\Traits\BootstrapMigrations;
 use yii\base;
 use yii\console;
 use yii\di;
 use Wearesho\Delivery;
 
-/**
- * Class Bootstrap
- * @package Wearesho\Delivery\Yii2
- */
 class Bootstrap extends base\BaseObject implements base\BootstrapInterface
 {
-    use BootstrapMigrations;
-
     /** @var array|string|Delivery\ServiceInterface definition */
     public $service;
 
     /**
      * @param base\Application $app
+     * @throws base\InvalidConfigException
      */
     public function bootstrap($app): void
     {
-        $this->setAliases($app);
         $this->configureContainer(\Yii::$container);
 
         if ($app instanceof console\Application) {
-            $this->appendMigrations($app, "Wearesho\\Delivery\\Yii2\\Migrations");
+            $migrationsBootstrap = new Migrations\Bootstrap();
+            $migrationsBootstrap->bootstrap($app);
         }
     }
 
@@ -53,12 +49,5 @@ class Bootstrap extends base\BaseObject implements base\BootstrapInterface
         if (!$serviceConfigured) {
             $container->set(Delivery\ServiceInterface::class, $this->service);
         }
-    }
-
-    public function setAliases(base\Application $application): void
-    {
-        $application->setAliases([
-            '@Wearesho/Delivery/Yii2' => '@vendor/wearesho-team/yii2-message-delivery/src',
-        ]);
     }
 }

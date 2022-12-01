@@ -1,22 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wearesho\Delivery\Yii2\Tests\Unit;
 
-use yii\phpunit\TestCase;
+use PHPUnit\Framework\TestCase;
 use yii\base;
 use Wearesho\Delivery;
 
-/**
- * Class SwitchServiceTest
- * @package Wearesho\Delivery\Yii2\Tests\Unit
- */
 class SwitchServiceTest extends TestCase
 {
     /** @var Delivery\ServiceMock[] */
-    protected $services;
+    protected array $services;
 
-    /** @var Delivery\Yii2\SwitchService */
-    protected $switchService;
+    protected Delivery\Yii2\SwitchService $switchService;
 
     protected function setUp(): void
     {
