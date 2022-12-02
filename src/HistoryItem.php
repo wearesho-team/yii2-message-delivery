@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wearesho\Delivery\Yii2;
 
 use Carbon\Carbon;
+use Horat1us\Yii\CarbonBehavior;
 use Wearesho\Delivery;
-
-use yii\behaviors\TimestampBehavior;
 use yii\db;
 
 /**
@@ -35,11 +36,8 @@ class HistoryItem extends db\ActiveRecord implements Delivery\HistoryItemInterfa
     {
         return [
             'ts' => [
-                'class' => TimestampBehavior::class,
+                'class' => CarbonBehavior::class,
                 'updatedAtAttribute' => null,
-                'value' => function (): string {
-                    return Carbon::now()->toDateTimeString();
-                },
             ],
         ];
     }
@@ -57,7 +55,7 @@ class HistoryItem extends db\ActiveRecord implements Delivery\HistoryItemInterfa
 
     public function isSent(): bool
     {
-        return $this->sent;
+        return (bool)$this->sent;
     }
 
     public function getSender(): string

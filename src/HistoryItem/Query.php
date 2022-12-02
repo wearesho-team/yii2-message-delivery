@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wearesho\Delivery\Yii2\HistoryItem;
 
 use yii\db;
 use Wearesho\Delivery;
 
 /**
- * Class Query
- * @package Wearesho\Delivery\Yii2\HistoryItem
  * @see \Wearesho\Delivery\Yii2\HistoryItem
  */
 class Query extends db\ActiveQuery

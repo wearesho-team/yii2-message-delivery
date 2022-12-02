@@ -6,10 +6,6 @@ namespace Wearesho\Delivery\Yii2\SwitchService;
 
 use Horat1us\Environment;
 
-/**
- * Class EnvironmentConfig
- * @package Wearesho\Delivery\Yii2\SwitchService
- */
 class EnvironmentConfig extends Environment\Config implements ConfigInterface
 {
     public function __construct(string $keyPrefix = 'DELIVERY_')
