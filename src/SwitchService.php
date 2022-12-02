@@ -4,19 +4,28 @@ declare(strict_types=1);
 
 namespace Wearesho\Delivery\Yii2;
 
+use Wearesho\Delivery;
 use yii\base;
 use yii\di;
-use Wearesho\Delivery;
-use Horat1us\Environment;
 
 class SwitchService extends base\BaseObject implements Delivery\ServiceInterface
 {
-    use Environment\ConfigTrait;
-
-    public string $environmentKeyPrefix = 'DELIVERY_';
+    /** @var array|string|SwitchService\ConfigInterface reference */
+    public $config = [
+        'class' => SwitchService\EnvironmentConfig::class,
+    ];
 
     /** @var string[]|array[]|Delivery\ServiceInterface[] definitions */
     public $services;
+
+    /**
+     * @throws base\InvalidConfigException
+     */
+    public function init(): void
+    {
+        parent::init();
+        $this->config = di\Instance::ensure($this->config, SwitchService\ConfigInterface::class);
+    }
 
     /**
      * @param Delivery\MessageInterface $message
@@ -39,21 +48,16 @@ class SwitchService extends base\BaseObject implements Delivery\ServiceInterface
      */
     public function getActiveService(): Delivery\ServiceInterface
     {
-        $environmentService = $this->getEnv('SERVICE', 'default');
+        $serviceKey = $this->config->getService();
 
-        if (!array_key_exists($environmentService, $this->services)) {
-            throw new base\InvalidConfigException("Service {$environmentService} does not configured.");
+        if (!array_key_exists($serviceKey, $this->services)) {
+            throw new base\InvalidConfigException("Service {$serviceKey} does not configured.");
         }
 
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return di\Instance::ensure(
-            $this->services[$environmentService],
+            $this->services[$serviceKey],
             Delivery\ServiceInterface::class
         );
-    }
-
-    protected function getEnvironmentKeyPrefix(): string
-    {
-        return $this->environmentKeyPrefix;
     }
 }
