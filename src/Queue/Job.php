@@ -26,6 +26,8 @@ class Job extends base\BaseObject implements queue\JobInterface
     /** @var string */
     public string $senderName;
 
+    public ?array $options = null;
+
     /**
      * @param Queue\Queue $queue which pushed and is handling the job
      * @throws base\InvalidConfigException
@@ -41,6 +43,10 @@ class Job extends base\BaseObject implements queue\JobInterface
 
     public function getMessage(): Delivery\MessageInterface
     {
+        if (is_array($this->options)) {
+            return new Delivery\MessageWithOptions($this->text, $this->recipient, $this->options);
+        }
+
         return empty($this->senderName)
             ? new Delivery\Message($this->text, $this->recipient)
             : new Delivery\MessageWithSender($this->text, $this->recipient, $this->senderName);

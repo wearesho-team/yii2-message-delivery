@@ -57,6 +57,8 @@ class Service extends base\BaseObject implements Delivery\ServiceInterface
 
         if ($message instanceof Delivery\ContainsSenderName) {
             $job->senderName = $message->getSenderName();
+        } elseif ($message instanceof Delivery\MessageOptionsInterface) {
+            $job->options = $message->getOptions();
         }
 
         $this->queue->push($job);
