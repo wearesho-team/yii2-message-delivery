@@ -54,6 +54,6 @@ class Job extends base\BaseObject implements queue\JobInterface
 
     public function __sleep(): array
     {
-        return ['service', 'recipient', 'text', 'senderName',];
+        return ['service', 'recipient', 'text', 'senderName', 'options',];
     }
 }
