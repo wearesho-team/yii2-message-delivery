@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9f33fdd7991f83e2dc2ffc19c940b0eb",
+    "content-hash": "2aa46e3d9112eaaa405dc8e850497b68",
     "packages": [
         {
             "name": "cebe/markdown",
@@ -2711,16 +2711,16 @@
         },
         {
             "name": "wearesho-team/message-delivery",
-            "version": "1.7.1",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wearesho-team/message-delivery.git",
-                "reference": "e4b2eb9cf15e078d594d1f2b287939fbbedd2c57"
+                "reference": "762d40c875d1bc32a53f933a33d08e6b01647710"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wearesho-team/message-delivery/zipball/e4b2eb9cf15e078d594d1f2b287939fbbedd2c57",
-                "reference": "e4b2eb9cf15e078d594d1f2b287939fbbedd2c57",
+                "url": "https://api.github.com/repos/wearesho-team/message-delivery/zipball/762d40c875d1bc32a53f933a33d08e6b01647710",
+                "reference": "762d40c875d1bc32a53f933a33d08e6b01647710",
                 "shasum": ""
             },
             "require": {
@@ -2754,9 +2754,9 @@
             "description": "Message Delivery Interfaces",
             "support": {
                 "issues": "https://github.com/wearesho-team/message-delivery/issues",
-                "source": "https://github.com/wearesho-team/message-delivery/tree/1.7.1"
+                "source": "https://github.com/wearesho-team/message-delivery/tree/1.8.0"
             },
-            "time": "2022-10-20T12:17:08+00:00"
+            "time": "2023-07-06T14:58:01+00:00"
         },
         {
             "name": "yiisoft/yii2",
