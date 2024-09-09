@@ -24,7 +24,7 @@
     "horat1us/yii2-migration-bootstrap": "^1.3",
     "horat1us/yii2-validation-exception": "^1.1",
     "nesbot/carbon": "^2.24 || ^1.22",
-    "wearesho-team/message-delivery": "^1.8",
+    "wearesho-team/message-delivery": "^1.9",
     "yiisoft/yii2": "^2.0.47"
   },
   "autoload": {

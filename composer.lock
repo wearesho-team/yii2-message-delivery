@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2aa46e3d9112eaaa405dc8e850497b68",
+    "content-hash": "98d4885d67ae48e020cb51e0f1483ec0",
     "packages": [
         {
             "name": "cebe/markdown",
@@ -2711,16 +2711,16 @@
         },
         {
             "name": "wearesho-team/message-delivery",
-            "version": "1.8.0",
+            "version": "1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wearesho-team/message-delivery.git",
-                "reference": "762d40c875d1bc32a53f933a33d08e6b01647710"
+                "reference": "a9a65f82934bdedaa6f057fcd20b595a1d68dafb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wearesho-team/message-delivery/zipball/762d40c875d1bc32a53f933a33d08e6b01647710",
-                "reference": "762d40c875d1bc32a53f933a33d08e6b01647710",
+                "url": "https://api.github.com/repos/wearesho-team/message-delivery/zipball/a9a65f82934bdedaa6f057fcd20b595a1d68dafb",
+                "reference": "a9a65f82934bdedaa6f057fcd20b595a1d68dafb",
                 "shasum": ""
             },
             "require": {
@@ -2754,9 +2754,9 @@
             "description": "Message Delivery Interfaces",
             "support": {
                 "issues": "https://github.com/wearesho-team/message-delivery/issues",
-                "source": "https://github.com/wearesho-team/message-delivery/tree/1.8.0"
+                "source": "https://github.com/wearesho-team/message-delivery/tree/1.9.0"
             },
-            "time": "2023-07-06T14:58:01+00:00"
+            "time": "2024-09-09T15:25:24+00:00"
         },
         {
             "name": "yiisoft/yii2",
@@ -3141,5 +3141,5 @@
     "platform-overrides": {
         "php": "7.4.33"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

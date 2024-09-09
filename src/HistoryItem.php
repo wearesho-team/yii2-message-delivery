@@ -19,8 +19,9 @@ use yii\db;
  * @property string $text
  * @property bool $sent [boolean]
  * @property int $created_at [timestamp(0)]
+ * @property array|null $options
  */
-class HistoryItem extends db\ActiveRecord implements Delivery\HistoryItemInterface
+class HistoryItem extends db\ActiveRecord implements Delivery\HistoryItemWithOptionsInterface
 {
     final public static function tableName(): string
     {
@@ -50,7 +51,21 @@ class HistoryItem extends db\ActiveRecord implements Delivery\HistoryItemInterfa
             [['recipient',], 'string', 'max' => 64,],
             [['text',], 'string',],
             [['sent',], 'boolean',],
+            [['options',], 'validateOptions',],
         ];
+    }
+
+    /**
+     * Validates the options attribute to ensure it's either an array or null.
+     *
+     * @param string $attribute the attribute currently being validated
+     * @param array $params the additional name-value pairs given in the rule
+     */
+    public function validateOptions($attribute, $params): void
+    {
+        if (!is_array($this->$attribute) && $this->$attribute !== null) {
+            $this->addError($attribute, 'The options must be an array or null.');
+        }
     }
 
     public function isSent(): bool
@@ -76,5 +91,10 @@ class HistoryItem extends db\ActiveRecord implements Delivery\HistoryItemInterfa
     public function getText(): string
     {
         return $this->text;
+    }
+
+    public function getOptions(): ?array
+    {
+        return $this->options;
     }
 }
