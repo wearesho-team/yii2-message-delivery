@@ -33,7 +33,7 @@ class Repository implements Delivery\RepositoryInterface
             'sender' => $item->getSender(),
         ]);
 
-        if ($item instanceof Delivery\MessageOptionsInterface) {
+        if ($item instanceof Delivery\HistoryItemWithOptionsInterface) {
             $record->options = $item->getOptions();
         }
 
