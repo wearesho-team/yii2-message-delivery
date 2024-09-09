@@ -21,7 +21,7 @@ use yii\db;
  * @property int $created_at [timestamp(0)]
  * @property array|null $options
  */
-class HistoryItem extends db\ActiveRecord implements Delivery\HistoryItemInterface
+class HistoryItem extends db\ActiveRecord implements Delivery\HistoryItemWithOptionsInterface
 {
     final public static function tableName(): string
     {
