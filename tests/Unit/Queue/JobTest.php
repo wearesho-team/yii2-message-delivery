@@ -18,7 +18,7 @@ class JobTest extends Delivery\Yii2\Tests\TestCase
         $job = new Delivery\Yii2\Queue\Job();
 
         $this->assertEquals(
-            ['service', 'recipient', 'text', 'senderName',],
+            ['service', 'recipient', 'text', 'senderName', 'options',],
             $job->__sleep()
         );
     }
