@@ -33,6 +33,10 @@ class Repository implements Delivery\RepositoryInterface
             'sender' => $item->getSender(),
         ]);
 
+        if ($item instanceof Delivery\MessageOptionsInterface) {
+            $record->options = $item->getOptions();
+        }
+
         Validation\Exception::saveOrThrow($record);
     }
 }
