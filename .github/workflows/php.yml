@@ -67,11 +67,10 @@ jobs:
       - name: Run PHPCS linter
         run: composer run-script lint
 
-      - name: Run PHPUnit tests on PostgreSQL
+      - name: Run PHPUnit tests on MySQL
         run: composer run-script test-pgsql
 
-
-      - name: Run PHPUnit tests on MySQL with coverage
+      - name: Run PHPUnit tests on Postgres with coverage
         run: composer run-script cover
 
       - name: Upload coverage to CodeCov

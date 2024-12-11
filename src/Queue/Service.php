@@ -11,6 +11,8 @@ use yii\queue\Queue;
 
 class Service extends base\BaseObject implements Delivery\ServiceInterface
 {
+    public const OPTION_SYNC = 'queue.sync';
+
     /** @var string|array|Queue */
     public $queue = 'queue';
 
@@ -47,6 +49,14 @@ class Service extends base\BaseObject implements Delivery\ServiceInterface
             );
         }
 
+        if ($message instanceof Delivery\MessageOptionsInterface) {
+            $options = $message->getOptions();
+            if (array_key_exists(self::OPTION_SYNC, $options) && ($options[self::OPTION_SYNC] === true)) {
+                $this->sendSync($message);
+                return;
+            }
+        }
+
         di\Instance::ensure($this->service, Delivery\ServiceInterface::class);
 
         $job = new Delivery\Yii2\Queue\Job();
@@ -62,5 +72,12 @@ class Service extends base\BaseObject implements Delivery\ServiceInterface
         }
 
         $this->queue->push($job);
+    }
+
+    private function sendSync(Delivery\MessageInterface $message): void
+    {
+        /** @var Delivery\ServiceInterface $service */
+        $service = di\Instance::ensure($this->service, Delivery\ServiceInterface::class);
+        $service->send($message);
     }
 }

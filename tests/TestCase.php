@@ -53,18 +53,8 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             \Yii::getAlias('@' . str_replace('\\', '/', $this->getMigrationNamespace()))
         );
 
-        /** @var \DirectoryIterator $file $file */
-        foreach (new \DirectoryIterator($migrationsDir) as $file) {
-            if (!$file->isFile()) {
-                continue;
-            }
-            $class = $this->getMigrationNamespace() . '\\' . str_replace('.php', '', $file->getFilename());
-
-            $migration = new $class();
-            if (!$migration instanceof db\Migration) {
-                continue;
-            }
-            $migration->db = \Yii::$app->db;
+        /** @var db\Migration $migration */
+        foreach ($this->getMigrations($migrationsDir) as $migration) {
             $this->migrations[] = $migration;
 
             ob_start();
@@ -74,6 +64,31 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             }
             ob_end_clean();
         }
+    }
+
+    private function getMigrations(string $migrationsDir): array
+    {
+        $migrations = [];
+        foreach (new \DirectoryIterator($migrationsDir) as $file) {
+            if (!$file->isFile()) {
+                continue;
+            }
+            $migrations[] = $file->getFilename();
+        }
+        sort($migrations);
+        foreach ($migrations as $i => $migrationFilename) {
+            $migrationClass = $this->getMigrationNamespace()
+                . '\\'
+                . str_replace('.php', '', $migrationFilename);
+            $migration = new $migrationClass();
+            if (!$migration instanceof db\Migration) {
+                unset($migrations[$i]);
+                continue;
+            }
+            $migration->db = \Yii::$app->db;
+            $migrations[$i] = $migration;
+        }
+        return $migrations;
     }
 
     protected function tearDown(): void

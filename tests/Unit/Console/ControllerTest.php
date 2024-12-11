@@ -10,6 +10,7 @@ use Wearesho\Delivery;
 class ControllerTest extends Delivery\Yii2\Tests\TestCase
 {
     protected Delivery\Yii2\Console\Controller $controller;
+    protected Delivery\ServiceMock $mock;
 
     protected function setUp(): void
     {

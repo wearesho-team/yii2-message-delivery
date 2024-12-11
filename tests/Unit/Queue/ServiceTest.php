@@ -63,6 +63,31 @@ class ServiceTest extends Delivery\Yii2\Tests\TestCase
         );
     }
 
+    public function testSendSync(): void
+    {
+        $repository = new Delivery\MemoryRepository();
+
+        \Yii::$container->setSingleton(
+            Delivery\ServiceMock::class,
+            function () use ($repository): Delivery\ServiceMock {
+                return new Delivery\ServiceMock($repository);
+            }
+        );
+        $this->service->service = [
+            'class' => Delivery\ServiceMock::class,
+        ];
+
+        $message = new Delivery\MessageWithOptions('text', 'recipient', [
+            Delivery\Yii2\Queue\Service::OPTION_SYNC => true,
+        ]);
+        $this->service->send($message);
+
+        // not calling $this->queue->run() to ensure message was sent without queue usage
+        $this->assertTrue(
+            $repository->isSent($message)
+        );
+    }
+
     public function testCreateWithSender(): void
     {
         $repository = new Delivery\MemoryRepository();

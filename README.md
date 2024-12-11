@@ -56,6 +56,27 @@ return [
 *Note: messages sent using Queue\Service have to correct work with serialize() and unserialize().
 See yii2-queue for details*
 
+#### Skipping queue while sending message
+Sometimes there is need to send message without queue (for example during mass messaging in CLI environment).
+To skip queue service you need to create message with options (Delivery\MessageOptionsInterface):
+
+```php
+<?php
+
+use Wearesho\Delivery;
+
+/** @var Delivery\Yii2\Queue\Service $service */
+$message = new Delivery\MessageWithOptions(
+    recipient: '380930000000',
+    text: 'Message Text',
+    options: [
+        Delivery\Yii2\Queue\Service::OPTION_SYNC => true,  
+    ]
+);
+
+$service->send($message); // message will be sent directly to sync service without queue job
+```
+
 ### SwitchService
 You can configure few delivery services, and choose one of them using environment variable.
 ```php
