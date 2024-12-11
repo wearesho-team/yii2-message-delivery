@@ -51,8 +51,8 @@
     "lint": "./vendor/bin/phpcs --standard=PSR12 ./src ./tests",
     "phpcbf": "./vendor/bin/phpcbf --standard=PSR12 ./src ./tests",
     "cover": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-clover coverage.xml",
-    "test-mysql": "./vendor/bin/phpunit --configuration phpunit.xml",
-    "test-pgsql": "./vendor/bin/phpunit --configuration phpunit.pgsql.xml",
+    "test-mysql": "./vendor/bin/phpunit --configuration phpunit.mysql.xml",
+    "test-pgsql": "./vendor/bin/phpunit --configuration phpunit.xml",
     "test": "composer run-script test-mysql && composer run-script test-pgsql"
   },
   "suggest": {

@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   mysql:
-    image: mysql:5.7
+    image: mysql:9.1
     environment:
       MYSQL_DATABASE: 'yii2_message_delivery'
       MYSQL_USER: 'yii2_message_delivery'
@@ -15,7 +15,7 @@ services:
     volumes:
       - mysql-volume:/var/lib/mysql
   pgsql:
-    image: postgres:14.1-alpine
+    image: postgres:17
     environment:
       - POSTGRES_USER=yii2_message_delivery
       - POSTGRES_PASSWORD=yii2_message_delivery
