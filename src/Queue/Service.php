@@ -5,19 +5,23 @@ declare(strict_types=1);
 namespace Wearesho\Delivery\Yii2\Queue;
 
 use Wearesho\Delivery;
+use Wearesho\Delivery\BalanceInterface;
 use yii\base;
 use yii\di;
 use yii\queue\Queue;
 
 class Service extends base\BaseObject implements Delivery\ServiceInterface
 {
-    public const OPTION_SYNC = 'queue.sync';
+    public const NAME = 'yii2.queue';
 
     /** @var string|array|Queue */
-    public $queue = 'queue';
+    public Queue|array|string $queue = 'queue';
 
     /** @var array Delivery\ServiceInterface configuration */
-    public $service;
+    public array $service;
+
+    /** @var array Delivery\History\RepositoryInterface configuration */
+    public array $repository;
 
     /**
      * @throws base\InvalidConfigException
@@ -35,26 +39,38 @@ class Service extends base\BaseObject implements Delivery\ServiceInterface
         // @codeCoverageIgnoreEnd
 
         $this->queue = di\Instance::ensure($this->queue, Queue::class);
+
+        if (empty($this->service)) {
+            throw new base\InvalidConfigException(
+                "You must configure service as array before usage"
+            );
+        }
+
+        if (empty($this->repository)) {
+            throw new base\InvalidConfigException(
+                "You must configure repository as array before usage"
+            );
+        }
+    }
+
+    public function name(): string
+    {
+        return static::NAME;
+    }
+
+    public function balance(): BalanceInterface
+    {
+        return $this->getSyncService()->balance();
     }
 
     /**
      * @param Delivery\MessageInterface $message
      * @throws base\InvalidConfigException
      */
-    public function send(Delivery\MessageInterface $message): void
+    public function send(Delivery\MessageInterface $message): Delivery\ResultInterface
     {
-        if (empty($this->service) || (!is_array($this->service) && !is_string($this->service))) {
-            throw new base\InvalidConfigException(
-                "You must configure service as string or array before usage"
-            );
-        }
-
-        if ($message instanceof Delivery\MessageOptionsInterface) {
-            $options = $message->getOptions();
-            if (array_key_exists(self::OPTION_SYNC, $options) && ($options[self::OPTION_SYNC] === true)) {
-                $this->sendSync($message);
-                return;
-            }
+        if (Delivery\Options::get($message, Options::SYNC) === true) {
+            return $this->sendSync($message);
         }
 
         di\Instance::ensure($this->service, Delivery\ServiceInterface::class);
@@ -62,22 +78,58 @@ class Service extends base\BaseObject implements Delivery\ServiceInterface
         $job = new Delivery\Yii2\Queue\Job();
 
         $job->service = $this->service;
-        $job->recipient = $message->getRecipient();
-        $job->text = $message->getText();
-
-        if ($message instanceof Delivery\ContainsSenderName) {
-            $job->senderName = $message->getSenderName();
-        } elseif ($message instanceof Delivery\MessageOptionsInterface) {
-            $job->options = $message->getOptions();
-        }
+        $job->repository = $this->repository;
+        $job->item = new Item(
+            message: $rawMessage = new Delivery\Message(
+                text: $message->getText(),
+                recipient: $message->getRecipient(),
+                options: $message->getOptions()
+            ),
+            jobId: $jobId = time() . hash('crc32', implode('|', [
+                    $message->getRecipient(),
+                    $message->getText(),
+                    json_encode($message->getOptions())
+                ])),
+        );
 
         $this->queue->push($job);
+
+        $result = new Delivery\Result(
+            $jobId,
+            $rawMessage,
+            Delivery\Result\Status::Queued
+        );
+
+        $this->getRepository()->add($this->name(), $result);
+
+        return $result;
     }
 
-    private function sendSync(Delivery\MessageInterface $message): void
+    private function sendSync(Delivery\MessageInterface $message): Delivery\ResultInterface
     {
-        /** @var Delivery\ServiceInterface $service */
-        $service = di\Instance::ensure($this->service, Delivery\ServiceInterface::class);
-        $service->send($message);
+        return $this->getSyncService()->send($message);
+    }
+
+    private function getSyncService(): Delivery\ServiceInterface
+    {
+        /** @var Delivery\ServiceInterface $baseService */
+        $baseService = di\Instance::ensure($this->service, Delivery\ServiceInterface::class);
+        /** @var Delivery\History\RepositoryInterface $repository */
+        $repository = di\Instance::ensure($this->repository, Delivery\History\RepositoryInterface::class);
+
+        return new Delivery\History\Service(
+            baseService: Delivery\Batch\Service::wrap($baseService),
+            repository: $repository,
+        );
+    }
+
+    private function getRepository(): Delivery\History\RepositoryInterface
+    {
+        /** @var Delivery\History\RepositoryInterface $repository */
+        $repository = di\Instance::ensure(
+            $this->repository,
+            Delivery\History\RepositoryInterface::class
+        );
+        return $repository;
     }
 }

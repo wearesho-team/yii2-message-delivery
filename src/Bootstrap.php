@@ -11,8 +11,7 @@ use Wearesho\Delivery;
 
 class Bootstrap extends base\BaseObject implements base\BootstrapInterface
 {
-    /** @var array|string|Delivery\ServiceInterface definition */
-    public $service;
+    public Delivery\ServiceInterface|array|string $service;
 
     /**
      * @param base\Application $app
@@ -30,12 +29,12 @@ class Bootstrap extends base\BaseObject implements base\BootstrapInterface
 
     public function configureContainer(di\Container $container): void
     {
-        $repositoryConfigured = $container->has(Delivery\RepositoryInterface::class)
-            || $container->hasSingleton(Delivery\RepositoryInterface::class);
+        $repositoryConfigured = $container->has(Delivery\History\RepositoryInterface::class)
+            || $container->hasSingleton(Delivery\History\RepositoryInterface::class);
 
         if (!$repositoryConfigured) {
             $container->setSingleton(
-                Delivery\RepositoryInterface::class,
+                Delivery\History\RepositoryInterface::class,
                 Delivery\Yii2\Repository::class
             );
         }

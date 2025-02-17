@@ -37,7 +37,15 @@ class RepositoryService extends base\BaseObject implements Delivery\ServiceInter
 
         try {
             $this->service->send($message);
-            $this->repository->push($message, $sender, true);
+            if ($message instanceof Delivery\Message\BatchInterface && !empty($message->history())) {
+                $history = $message->history();
+                /** @var Delivery\HistoryItemInterface $record */
+                foreach ($history as $record) {
+                    $this->repository->push($record, $record->getSender(), $record->isSent());
+                }
+            } else {
+                $this->repository->push($message, $sender, true);
+            }
         } catch (\Throwable $exception) {
             $this->repository->push($message, $sender, false);
             throw $exception;

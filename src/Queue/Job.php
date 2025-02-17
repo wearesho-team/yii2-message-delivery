@@ -15,18 +15,14 @@ class Job extends base\BaseObject implements queue\JobInterface
      * @see Delivery\ServiceInterface
      * @var array|string array or string definition
      */
-    public $service;
+    public array|string $service;
+    /**
+     * @see Delivery\History\RepositoryInterface
+     * @var array|string array or string definition
+     */
+    public array|string $repository;
 
-    /** @var string */
-    public string $recipient;
-
-    /** @var string */
-    public string $text;
-
-    /** @var string */
-    public string $senderName;
-
-    public ?array $options = null;
+    public Item $item;
 
     /**
      * @param Queue\Queue $queue which pushed and is handling the job
@@ -37,23 +33,21 @@ class Job extends base\BaseObject implements queue\JobInterface
     {
         /** @var Delivery\ServiceInterface $service */
         $service = di\Instance::ensure($this->service, Delivery\ServiceInterface::class);
+        /** @var Delivery\History\RepositoryInterface $repository */
+        $repository = di\Instance::ensure(
+            $this->repository,
+            Delivery\History\RepositoryInterface::class
+        );
 
-        $service->send($this->getMessage());
-    }
-
-    public function getMessage(): Delivery\MessageInterface
-    {
-        if (is_array($this->options)) {
-            return new Delivery\MessageWithOptions($this->text, $this->recipient, $this->options);
+        $result = $service->send($this->item->message());
+        $historyItem = $repository->getByResultId(Service::NAME, $this->item->jobId());
+        if (!is_null($historyItem)) {
+            $repository->update($historyItem, $result, $service->name());
         }
-
-        return empty($this->senderName)
-            ? new Delivery\Message($this->text, $this->recipient)
-            : new Delivery\MessageWithSender($this->text, $this->recipient, $this->senderName);
     }
 
     public function __sleep(): array
     {
-        return ['service', 'recipient', 'text', 'senderName', 'options',];
+        return ['service', 'repository', 'item',];
     }
 }

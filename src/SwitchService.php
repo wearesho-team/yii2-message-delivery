@@ -11,12 +11,12 @@ use yii\di;
 class SwitchService extends base\BaseObject implements Delivery\ServiceInterface
 {
     /** @var array|string|SwitchService\ConfigInterface reference */
-    public $config = [
+    public SwitchService\ConfigInterface|array|string $config = [
         'class' => SwitchService\EnvironmentConfig::class,
     ];
 
     /** @var string[]|array[]|Delivery\ServiceInterface[] definitions */
-    public $services;
+    public array $services;
 
     /**
      * @throws base\InvalidConfigException
@@ -31,22 +31,32 @@ class SwitchService extends base\BaseObject implements Delivery\ServiceInterface
      * @param Delivery\MessageInterface $message
      * @throws Delivery\Exception
      */
-    public function send(Delivery\MessageInterface $message): void
+    public function send(Delivery\MessageInterface $message): Delivery\ResultInterface
     {
         try {
-            $service = $this->getActiveService();
+            $service = $this->activeService();
         } catch (base\InvalidConfigException $e) {
             throw new Delivery\Exception("Error while instantiating delivery service.", 0, $e);
         }
 
-        $service->send($message);
+        return $service->send($message);
+    }
+
+    public function name(): string
+    {
+        return $this->activeService()->name();
+    }
+
+    public function balance(): Delivery\BalanceInterface
+    {
+        return $this->activeService()->balance();
     }
 
     /**
      * @return Delivery\ServiceInterface
      * @throws base\InvalidConfigException
      */
-    public function getActiveService(): Delivery\ServiceInterface
+    private function activeService(): Delivery\ServiceInterface
     {
         $serviceKey = $this->config->getService();
 
@@ -54,10 +64,13 @@ class SwitchService extends base\BaseObject implements Delivery\ServiceInterface
             throw new base\InvalidConfigException("Service {$serviceKey} does not configured.");
         }
 
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return di\Instance::ensure(
+        /** @var Delivery\ServiceInterface $service */
+        $service = di\Instance::ensure(
             $this->services[$serviceKey],
             Delivery\ServiceInterface::class
         );
+        $this->services[$serviceKey] = $service;
+
+        return $service;
     }
 }

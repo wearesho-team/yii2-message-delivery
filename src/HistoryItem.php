@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Wearesho\Delivery\Yii2;
 
-use Carbon\Carbon;
 use Horat1us\Yii\CarbonBehavior;
+use Carbon\Carbon;
 use Wearesho\Delivery;
 use yii\db;
 
@@ -16,12 +16,15 @@ use yii\db;
  * @property string $id [integer]
  * @property string $sender [varchar(255)]
  * @property string $recipient [varchar(64)]
- * @property string $text
- * @property bool $sent [boolean]
- * @property int $created_at [timestamp(0)]
- * @property array|null $options
+ * @property string $text [text]
+ * @property string $created_at [timestamp(0)]
+ * @property string $updated_at [timestamp(0)]
+ * @property array|null $options [json]
+ * @property string $status [enum]
+ * @property string|null $reason [text]
+ * @property string|null $external_id
  */
-class HistoryItem extends db\ActiveRecord implements Delivery\HistoryItemWithOptionsInterface
+class HistoryItem extends db\ActiveRecord
 {
     final public static function tableName(): string
     {
@@ -38,7 +41,6 @@ class HistoryItem extends db\ActiveRecord implements Delivery\HistoryItemWithOpt
         return [
             'ts' => [
                 'class' => CarbonBehavior::class,
-                'updatedAtAttribute' => null,
             ],
         ];
     }
@@ -46,11 +48,14 @@ class HistoryItem extends db\ActiveRecord implements Delivery\HistoryItemWithOpt
     public function rules(): array
     {
         return [
-            [['recipient', 'text', 'sent', 'sender',], 'required',],
-            [['sender',], 'string', 'max' => 255,],
+            [['recipient', 'text', 'status', 'sender',], 'required',],
+            [['sender', 'external_id', 'reason',], 'string', 'max' => 255,],
             [['recipient',], 'string', 'max' => 64,],
             [['text',], 'string',],
-            [['sent',], 'boolean',],
+            [['status',], 'in', 'range' => fn() => array_map(
+                fn(Delivery\Result\Status $status) => $status->value,
+                Delivery\Result\Status::cases()
+            ),],
             [['options',], 'validateOptions',],
         ];
     }
@@ -68,33 +73,25 @@ class HistoryItem extends db\ActiveRecord implements Delivery\HistoryItemWithOpt
         }
     }
 
-    public function isSent(): bool
+    public function toItem(): Delivery\History\ItemInterface
     {
-        return (bool)$this->sent;
-    }
-
-    public function getSender(): string
-    {
-        return $this->sender;
-    }
-
-    public function getSentAt(): \DateTimeInterface
-    {
-        return Carbon::parse($this->created_at);
-    }
-
-    public function getRecipient(): string
-    {
-        return $this->recipient;
-    }
-
-    public function getText(): string
-    {
-        return $this->text;
-    }
-
-    public function getOptions(): ?array
-    {
-        return $this->options;
+        $message = new Delivery\Message(
+            text: $this->text,
+            recipient: $this->recipient,
+            options: $this->options ?? []
+        );
+        $result = new Delivery\Result(
+            messageId: $this->external_id,
+            message: $message,
+            status: Delivery\Result\Status::from($this->status),
+            reason: $this->reason,
+        );
+        return new Delivery\History\Item(
+            id: (int)$this->id,
+            result: $result,
+            serviceName: $this->sender,
+            at: Carbon::parse($this->created_at),
+            updatedAt: Carbon::parse($this->updated_at),
+        );
     }
 }

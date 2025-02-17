@@ -4,39 +4,109 @@ declare(strict_types=1);
 
 namespace Wearesho\Delivery\Yii2;
 
+use Carbon\Carbon;
 use Horat1us\Yii\Validation;
 use Wearesho\Delivery;
+use Wearesho\Delivery\History\ItemInterface;
 
-class Repository implements Delivery\RepositoryInterface
+class Repository implements Delivery\History\RepositoryInterface
 {
-    use Delivery\RepositoryTrait;
-
-    public function getHistoryItem(Delivery\MessageInterface $message): ?Delivery\HistoryItemInterface
+    public function add(string $serviceName, Delivery\ResultInterface $item): ItemInterface
     {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return HistoryItem::find()
-            ->orderBy(['message_delivery_history.id' => SORT_DESC])
-            ->andWhereMessage($message)
-            ->one();
+        $historyItem = new HistoryItem();
+        $historyItem->setAttributes(
+            $this->getAttributes($serviceName, $item)
+        );
+
+        Validation\Exception::saveOrThrow($historyItem);
+
+        return $historyItem->toItem();
     }
 
-    /**
-     * @param Delivery\HistoryItemInterface $item
-     * @throws Validation\Failure
-     */
-    public function save(Delivery\HistoryItemInterface $item): void
+    public function batch(string $serviceName, array $items): array
     {
-        $record = new HistoryItem([
-            'recipient' => $item->getRecipient(),
-            'sent' => $item->isSent(),
-            'text' => $item->getText(),
-            'sender' => $item->getSender(),
-        ]);
+        if (empty($items)) {
+            return [];
+        }
+        $attributes = array_keys(
+            $this->getAttributes($serviceName, $items[array_key_first($items)])
+        );
+        $results = [];
+        $insertedCount = HistoryItem::getDb()->createCommand()->batchInsert(
+            HistoryItem::tableName(),
+            $attributes,
+            array_map(
+                function (Delivery\ResultInterface $result) use ($serviceName, $results): array {
+                    $attributes = $this->getAttributes($serviceName, $result);
+                    $historyItem = new HistoryItem();
+                    $historyItem->setAttributes($attributes);
+                    $historyItem->created_at = Carbon::now()->toDateTimeString();
+                    $historyItem->updated_at = $historyItem->created_at;
+                    $results[] = $historyItem->toItem();
+                    return $attributes;
+                },
+                $items
+            )
+        )->execute();
 
-        if ($item instanceof Delivery\HistoryItemWithOptionsInterface) {
-            $record->options = $item->getOptions();
+        return ($insertedCount === count($results)) ? $results : [];
+    }
+
+    private function getAttributes(string $serviceName, Delivery\ResultInterface $item): array
+    {
+        $message = $item->message();
+        $options = $message->getOptions();
+
+        return [
+            'sender' => $serviceName,
+            'recipient' => $message->getRecipient(),
+            'text' => $message->getText(),
+            'options' => empty($options) ? null : $options,
+            'status' => $item->status()->value,
+            'reason' => $item->reason(),
+            'external_id' => $item->messageId(),
+        ];
+    }
+
+    public function update(
+        ItemInterface $item,
+        Delivery\ResultInterface $result,
+        ?string $serviceName = null
+    ): ItemInterface {
+        $historyItem = HistoryItem::find()
+            ->andWhere(['=', 'id', $item->id()])
+            ->one();
+
+        if (!$historyItem instanceof HistoryItem) {
+            throw new \InvalidArgumentException("Unable to find history item {$item->id()}");
         }
 
-        Validation\Exception::saveOrThrow($record);
+        $attributes = $this->getAttributes($serviceName ?? $item->serviceName(), $result);
+        $historyItem->setAttributes($attributes);
+
+        Validation\Exception::saveOrThrow($historyItem);
+
+        return $historyItem->toItem();
+    }
+
+    public function getById(int $id): ?ItemInterface
+    {
+        /** @var HistoryItem|null $historyItem */
+        $historyItem = HistoryItem::find()
+            ->andWhere(['=', 'id', $id])
+            ->one();
+
+        return $historyItem?->toItem();
+    }
+
+    public function getByResultId(string $serviceName, string $resultId): ?ItemInterface
+    {
+        /** @var HistoryItem|null $historyItem */
+        $historyItem = HistoryItem::find()
+            ->andWhere(['=', 'id', $resultId])
+            ->andWhere(['=', 'sender', $serviceName])
+            ->one();
+
+        return $historyItem?->toItem();
     }
 }
