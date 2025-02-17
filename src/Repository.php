@@ -36,7 +36,7 @@ class Repository implements Delivery\History\RepositoryInterface
             HistoryItem::tableName(),
             $attributes,
             array_map(
-                function (Delivery\ResultInterface $result) use ($serviceName, $results): array {
+                function (Delivery\ResultInterface $result) use ($serviceName, &$results): array {
                     $attributes = $this->getAttributes($serviceName, $result);
                     $historyItem = new HistoryItem();
                     $historyItem->setAttributes($attributes);

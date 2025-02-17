@@ -12,6 +12,7 @@ use Wearesho\Delivery;
 class Bootstrap extends base\BaseObject implements base\BootstrapInterface
 {
     public Delivery\ServiceInterface|array|string $service;
+    public Delivery\Batch\ServiceInterface|array|string|null $batchService = null;
 
     /**
      * @param base\Application $app
@@ -39,14 +40,21 @@ class Bootstrap extends base\BaseObject implements base\BootstrapInterface
             );
         }
 
-        $serviceConfigured = !empty($this->service)
-            && (
-                $container->has(Delivery\ServiceInterface::class)
-                || $container->hasSingleton(Delivery\ServiceInterface::class)
-            );
+        $serviceConfigured = (
+            $container->has(Delivery\ServiceInterface::class)
+            || $container->hasSingleton(Delivery\ServiceInterface::class)
+        );
 
         if (!$serviceConfigured) {
             $container->set(Delivery\ServiceInterface::class, $this->service);
+        }
+
+        $batchServiceConfigured = !empty($this->batchService) && (
+                $container->has(Delivery\Batch\ServiceInterface::class)
+                || $container->hasSingleton(Delivery\Batch\ServiceInterface::class)
+            );
+        if (!$batchServiceConfigured) {
+            $container->set(Delivery\Batch\ServiceInterface::class, $this->batchService);
         }
     }
 }
