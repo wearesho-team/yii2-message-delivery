@@ -26,7 +26,7 @@ class M250211000000AddStatusColumnToMessageDeliveryHistoryTable extends Migratio
 
         $this->execute(<<<SQL
 UPDATE message_delivery_history
-SET status=(CASE WHEN is_sent IS TRUE THEN 'Sent' ELSE 'Failed' END)
+SET status=(CASE WHEN sent IS TRUE THEN 'Sent' ELSE 'Failed' END)
 SQL
         );
 
@@ -50,7 +50,7 @@ SQL
         );
         $this->execute(<<<SQL
 UPDATE message_delivery_history
-SET is_sent=(status='Delivered' OR status='Sent' OR status='Accepted' OR status='Read' OR status='Queued')
+SET sent=(status='Delivered' OR status='Sent' OR status='Accepted' OR status='Read' OR status='Queued')
 SQL
         );
         $this->alterColumn(
