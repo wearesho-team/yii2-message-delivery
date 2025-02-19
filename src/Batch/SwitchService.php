@@ -20,6 +20,15 @@ class SwitchService implements Delivery\Batch\ServiceInterface
     /** @var string[]|array[]|Delivery\Batch\ServiceInterface[] definitions */
     public array $services;
 
+    /**
+     * @throws base\InvalidConfigException
+     */
+    public function init(): void
+    {
+        parent::init();
+        $this->config = di\Instance::ensure($this->config, SwitchService\ConfigInterface::class);
+    }
+
     public function name(): string
     {
         return $this->activeService()->name();
