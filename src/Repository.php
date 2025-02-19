@@ -103,7 +103,7 @@ class Repository implements Delivery\History\RepositoryInterface
     {
         /** @var HistoryItem|null $historyItem */
         $historyItem = HistoryItem::find()
-            ->andWhere(['=', 'id', $resultId])
+            ->andWhere(['=', 'external_id', $resultId])
             ->andWhere(['=', 'sender', $serviceName])
             ->one();
 
