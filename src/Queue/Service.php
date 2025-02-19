@@ -21,7 +21,9 @@ class Service extends base\BaseObject implements Delivery\ServiceInterface
     public array $service;
 
     /** @var array Delivery\History\RepositoryInterface configuration */
-    public array $repository;
+    public array $repository = [
+        'class' => Delivery\History\RepositoryInterface::class,
+    ];
 
     /**
      * @throws base\InvalidConfigException
