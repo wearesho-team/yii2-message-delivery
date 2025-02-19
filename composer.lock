@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "43ecaf232f9d2731de9d6944dd5b7f9e",
+    "content-hash": "2a4f75b033f8c60cf6373144228d268e",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -1155,16 +1155,16 @@
         },
         {
             "name": "wearesho-team/message-delivery",
-            "version": "dev-release/2",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wearesho-team/message-delivery.git",
-                "reference": "2cb34c8bde76d963e4e16c4c0d0dd163442843e2"
+                "reference": "d256f1aa341b0b8589457e0bab964f592c90bc28"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wearesho-team/message-delivery/zipball/2cb34c8bde76d963e4e16c4c0d0dd163442843e2",
-                "reference": "2cb34c8bde76d963e4e16c4c0d0dd163442843e2",
+                "url": "https://api.github.com/repos/wearesho-team/message-delivery/zipball/d256f1aa341b0b8589457e0bab964f592c90bc28",
+                "reference": "d256f1aa341b0b8589457e0bab964f592c90bc28",
                 "shasum": ""
             },
             "require": {
@@ -1199,9 +1199,9 @@
             "description": "Message Delivery Interfaces",
             "support": {
                 "issues": "https://github.com/wearesho-team/message-delivery/issues",
-                "source": "https://github.com/wearesho-team/message-delivery/tree/release/2"
+                "source": "https://github.com/wearesho-team/message-delivery/tree/2.3.0"
             },
-            "time": "2025-02-17T11:24:22+00:00"
+            "time": "2025-02-19T20:47:25+00:00"
         },
         {
             "name": "yiisoft/yii2",
@@ -3405,9 +3405,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "wearesho-team/message-delivery": 20
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
