@@ -58,7 +58,7 @@ class SwitchService implements Delivery\Batch\ServiceInterface
      */
     private function activeService(): Delivery\Batch\ServiceInterface
     {
-        $serviceKey = $this->config->getService();
+        $serviceKey = $this->config->getBatchService();
 
         if (!array_key_exists($serviceKey, $this->services)) {
             throw new base\InvalidConfigException("Service {$serviceKey} does not configured.");

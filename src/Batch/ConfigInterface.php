@@ -8,5 +8,5 @@ interface ConfigInterface
 {
     public const SERVICE_DEFAULT = 'default';
 
-    public function getService(): string;
+    public function getBatchService(): string;
 }
