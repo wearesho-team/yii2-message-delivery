@@ -10,7 +10,7 @@ use Wearesho\Delivery\ResultInterface;
 use yii\base;
 use yii\di;
 
-class SwitchService implements Delivery\Batch\ServiceInterface
+class SwitchService extends base\BaseObject implements Delivery\Batch\ServiceInterface
 {
     /** @var array|string|ConfigInterface reference */
     public ConfigInterface|array|string $config = [
@@ -26,7 +26,7 @@ class SwitchService implements Delivery\Batch\ServiceInterface
     public function init(): void
     {
         parent::init();
-        $this->config = di\Instance::ensure($this->config, SwitchService\ConfigInterface::class);
+        $this->config = di\Instance::ensure($this->config, ConfigInterface::class);
     }
 
     public function name(): string
