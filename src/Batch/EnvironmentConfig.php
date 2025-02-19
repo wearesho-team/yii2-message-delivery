@@ -12,6 +12,6 @@ class EnvironmentConfig extends Environment\Yii2\Config implements ConfigInterfa
 
     public function getBatchService(): string
     {
-        return $this->getEnv('SERVICE', static::SERVICE_DEFAULT);
+        return $this->getEnv('SERVICE', static::BATCH_SERVICE_DEFAULT);
     }
 }
