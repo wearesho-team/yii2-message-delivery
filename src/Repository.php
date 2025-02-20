@@ -34,7 +34,7 @@ class Repository implements Delivery\History\RepositoryInterface
         $results = [];
         $insertedCount = HistoryItem::getDb()->createCommand()->batchInsert(
             HistoryItem::tableName(),
-            $attributes,
+            array_merge($attributes, ['created_at', 'updated_at']),
             array_map(
                 function (Delivery\ResultInterface $result) use ($serviceName, &$results): array {
                     $attributes = $this->getAttributes($serviceName, $result);
@@ -43,6 +43,11 @@ class Repository implements Delivery\History\RepositoryInterface
                     $historyItem->created_at = Carbon::now()->toDateTimeString();
                     $historyItem->updated_at = $historyItem->created_at;
                     $results[] = $historyItem->toItem();
+                    if (!empty($attributes['options'])) {
+                        $attributes['options'] = json_encode($attributes['options'], JSON_THROW_ON_ERROR);
+                    }
+                    $attributes['created_at'] = $historyItem->created_at;
+                    $attributes['updated_at'] = $historyItem->updated_at;
                     return $attributes;
                 },
                 $items
