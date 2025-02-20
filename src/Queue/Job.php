@@ -39,7 +39,17 @@ class Job extends base\BaseObject implements queue\JobInterface
             Delivery\History\RepositoryInterface::class
         );
 
-        $result = $service->send($this->item->message());
+        try {
+            $result = $service->send($this->item->message());
+        } catch (Delivery\Exception $exception) {
+            \Yii::error($exception->getMessage());
+            $result = new Delivery\Result(
+                messageId: $this->item->jobId(),
+                message: $this->item->message(),
+                status: Delivery\Result\Status::Error,
+                reason: $exception->getMessage(),
+            );
+        }
         $historyItem = $repository->getByResultId(Service::NAME, $this->item->jobId());
         if (!is_null($historyItem)) {
             $repository->update($historyItem, $result, $service->name());
