@@ -12,6 +12,7 @@ use Wearesho\Delivery;
 class Bootstrap extends base\BaseObject implements base\BootstrapInterface
 {
     public Delivery\ServiceInterface|array|string $service;
+    public Delivery\History\RepositoryInterface|array|string $repository = Repository::class;
     public Delivery\Batch\ServiceInterface|array|string|null $batchService = null;
 
     /**
@@ -28,33 +29,65 @@ class Bootstrap extends base\BaseObject implements base\BootstrapInterface
         }
     }
 
-    public function configureContainer(di\Container $container): void
-    {
-        $repositoryConfigured = $container->has(Delivery\History\RepositoryInterface::class)
-            || $container->hasSingleton(Delivery\History\RepositoryInterface::class);
-
-        if (!$repositoryConfigured) {
+    public function configureContainer(
+        di\Container $container
+    ): void {
+        $repository = $this->getRepositoryDefinition($container);
+        if (!is_null($repository)) {
             $container->setSingleton(
                 Delivery\History\RepositoryInterface::class,
-                Delivery\Yii2\Repository::class
+                $repository
             );
         }
 
-        $serviceConfigured = (
-            $container->has(Delivery\ServiceInterface::class)
+        $service = $this->getServiceDefinition($container);
+        if (!is_null($service)) {
+            $container->set(Delivery\ServiceInterface::class, $service);
+        }
+
+        $batchService = $this->getBatchServiceDefinition($container);
+        if (!is_null($batchService)) {
+            $container->set(Delivery\Batch\ServiceInterface::class, $batchService);
+        }
+    }
+
+    protected function getRepositoryDefinition(
+        di\Container $container
+    ): Delivery\History\RepositoryInterface|array|string|null {
+        if (
+            $container->has(Delivery\History\RepositoryInterface::class)
+            || $container->hasSingleton(Delivery\History\RepositoryInterface::class)
+        ) {
+            return null;
+        }
+        return $this->repository;
+    }
+
+    protected function getServiceDefinition(
+        di\Container $container
+    ): Delivery\Batch\ServiceInterface|array|string|null {
+        if (
+            empty($this->service)
+            || $container->has(Delivery\ServiceInterface::class)
             || $container->hasSingleton(Delivery\ServiceInterface::class)
-        );
-
-        if (!$serviceConfigured) {
-            $container->set(Delivery\ServiceInterface::class, $this->service);
+        ) {
+            return null;
         }
 
-        $batchServiceConfigured = !empty($this->batchService) && (
-                $container->has(Delivery\Batch\ServiceInterface::class)
-                || $container->hasSingleton(Delivery\Batch\ServiceInterface::class)
-            );
-        if (!$batchServiceConfigured) {
-            $container->set(Delivery\Batch\ServiceInterface::class, $this->batchService);
+        return $this->batchService;
+    }
+
+    protected function getBatchServiceDefinition(
+        di\Container $container
+    ): Delivery\Batch\ServiceInterface|array|string|null {
+        if (
+            empty($this->batchService)
+            || $container->has(Delivery\Batch\ServiceInterface::class)
+            || $container->hasSingleton(Delivery\Batch\ServiceInterface::class)
+        ) {
+            return null;
         }
+
+        return $this->batchService;
     }
 }
