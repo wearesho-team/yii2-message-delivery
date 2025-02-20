@@ -67,14 +67,13 @@ class Bootstrap extends base\BaseObject implements base\BootstrapInterface
         di\Container $container
     ): Delivery\Batch\ServiceInterface|array|string|null {
         if (
-            empty($this->service)
-            || $container->has(Delivery\ServiceInterface::class)
+            $container->has(Delivery\ServiceInterface::class)
             || $container->hasSingleton(Delivery\ServiceInterface::class)
         ) {
             return null;
         }
 
-        return $this->batchService;
+        return $this->service;
     }
 
     protected function getBatchServiceDefinition(
