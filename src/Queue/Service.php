@@ -87,11 +87,7 @@ class Service extends base\BaseObject implements Delivery\ServiceInterface
                 recipient: $message->getRecipient(),
                 options: $message->getOptions()
             ),
-            jobId: $jobId = time() . hash('crc32', implode('|', [
-                    $message->getRecipient(),
-                    $message->getText(),
-                    json_encode($message->getOptions())
-                ])),
+            jobId: $jobId = uniqid('', true),
         );
 
         $this->queue->push($job);
