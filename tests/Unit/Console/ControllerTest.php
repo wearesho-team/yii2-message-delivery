@@ -4,27 +4,23 @@ declare(strict_types=1);
 
 namespace Wearesho\Delivery\Yii2\Tests\Unit\Console;
 
-use yii\base;
 use Wearesho\Delivery;
+use Wearesho\Delivery\Yii2\Tests\ServiceMock;
+use yii\base;
 
 class ControllerTest extends Delivery\Yii2\Tests\TestCase
 {
-    protected Delivery\Yii2\Console\Controller $controller;
-    protected Delivery\ServiceMock $mock;
+    private Delivery\Yii2\Console\Controller $controller;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->mock = new Delivery\ServiceMock();
-        $this->controller = \Yii::$container->get(
-            Delivery\Yii2\Console\Controller::class,
-            [
-                'delivery',
-                new base\Module('default'),
-            ],
+        $this->controller = new Delivery\Yii2\Console\Controller(
+            'delivery',
+            new base\Module('default'),
             [
                 'delivery' => [
-                    'class' => Delivery\ServiceMock::class,
+                    'class' => ServiceMock::class,
                 ],
             ]
         );
@@ -32,32 +28,37 @@ class ControllerTest extends Delivery\Yii2\Tests\TestCase
 
     public function testActionSend(): void
     {
-        $text = 'Test Message';
-        $recipient = 'testRecipient';
-
-        /** @noinspection PhpUnhandledExceptionInspection */
         $this->controller->runAction('send', [
-            'message' => $text,
-            $recipient,
+            'message' => 'Test Message',
+            '380930000001',
         ]);
 
-        /** @var Delivery\ServiceMock $delivery */
         $delivery = $this->controller->delivery;
-        $this->assertInstanceOf(
-            Delivery\ServiceMock::class,
-            $delivery
-        );
-        $repository = $delivery->getRepository();
-
-        $this->assertTrue(
-            $repository->isSent(new Delivery\Message($text, $recipient))
-        );
+        $this->assertInstanceOf(ServiceMock::class, $delivery);
+        $this->assertCount(1, $delivery->messages);
+        $this->assertEquals('Test Message', $delivery->messages[0]->getText());
+        $this->assertEquals('380930000001', $delivery->messages[0]->getRecipient());
     }
 
-    public function testOptionsAliases(): void
+    public function testActionSendWithMessageAlias(): void
     {
-        $aliases = $this->controller->optionAliases();
-        $this->assertArrayHasKey('m', $aliases);
-        $this->assertEquals('message', $aliases['m']);
+        $this->controller->runAction('send', [
+            '_aliases' => [
+                'm' => 'Aliased Message',
+            ],
+            '380930000002',
+        ]);
+
+        /** @var ServiceMock $delivery */
+        $delivery = $this->controller->delivery;
+        $this->assertCount(1, $delivery->messages);
+        $this->assertEquals('Aliased Message', $delivery->messages[0]->getText());
+        $this->assertEquals('380930000002', $delivery->messages[0]->getRecipient());
+    }
+
+    public function testOptions(): void
+    {
+        $this->assertContains('message', $this->controller->options('send'));
+        $this->assertEquals('message', $this->controller->optionAliases()['m'] ?? null);
     }
 }
