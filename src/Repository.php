@@ -110,6 +110,8 @@ class Repository implements Delivery\History\RepositoryInterface
         $historyItem = HistoryItem::find()
             ->andWhere(['=', 'external_id', $resultId])
             ->andWhere(['=', 'sender', $serviceName])
+            // result ID may be shared by messages sent within single bulk request
+            ->orderBy(['id' => SORT_ASC])
             ->one();
 
         return $historyItem?->toItem();
