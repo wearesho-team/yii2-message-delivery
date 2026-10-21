@@ -1,115 +1,125 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Wearesho\Delivery\Yii2\Tests\Unit\Queue;
 
 use Wearesho\Delivery;
-use yii\queue;
+use Wearesho\Delivery\Yii2\Tests\ServiceMock;
 use yii\base;
+use yii\queue;
 
 /**
- * Class ServiceTest
- * @package Wearesho\Delivery\Yii2\Tests\Unit\Queue
  * @coversDefaultClass \Wearesho\Delivery\Yii2\Queue\Service
  */
 class ServiceTest extends Delivery\Yii2\Tests\TestCase
 {
-    /** @var Delivery\Yii2\Queue\Service */
-    protected $service;
+    private queue\sync\Queue $queue;
 
-    /** @var queue\sync\Queue */
-    protected $queue;
+    private ServiceMock $mock;
+
+    private Delivery\Yii2\Repository $repository;
+
+    private Delivery\Yii2\Queue\Service $service;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->queue = new queue\sync\Queue();
+        $this->mock = new ServiceMock('mock', 100);
+        \Yii::$container->setSingleton(ServiceMock::class, $this->mock);
+        $this->repository = new Delivery\Yii2\Repository();
         $this->service = new Delivery\Yii2\Queue\Service([
+            'queue' => $this->queue,
+            'service' => [
+                'class' => ServiceMock::class,
+            ],
+            'repository' => [
+                'class' => Delivery\Yii2\Repository::class,
+            ],
+        ]);
+    }
+
+    public function testMissingService(): void
+    {
+        $this->expectException(base\InvalidConfigException::class);
+        $this->expectExceptionMessage('You must configure service as array before usage');
+
+        new Delivery\Yii2\Queue\Service([
             'queue' => $this->queue,
         ]);
     }
 
-    public function testInvalidService(): void
+    public function testMissingRepository(): void
     {
-        $subService = new Delivery\ServiceMock();
-        $this->service->service = $subService;
-
         $this->expectException(base\InvalidConfigException::class);
-        $this->expectExceptionMessage('You must configure service as string or array before usage');
-        $this->service->send(new Delivery\Message('text', 'recipient'));
+        $this->expectExceptionMessage('You must configure repository as array before usage');
+
+        new Delivery\Yii2\Queue\Service([
+            'queue' => $this->queue,
+            'service' => [
+                'class' => ServiceMock::class,
+            ],
+            'repository' => [],
+        ]);
+    }
+
+    public function testName(): void
+    {
+        $this->assertEquals(Delivery\Yii2\Queue\Service::NAME, $this->service->name());
+    }
+
+    public function testBalance(): void
+    {
+        $this->assertEquals(100, $this->service->balance()->getAmount());
     }
 
     public function testSend(): void
     {
-        $repository = new Delivery\MemoryRepository();
+        $message = new Delivery\Message('text', '380930000001', [
+            Delivery\Options::SENDER_NAME => 'sender',
+        ]);
 
-        \Yii::$container->setSingleton(
-            Delivery\ServiceMock::class,
-            function () use ($repository): Delivery\ServiceMock {
-                return new Delivery\ServiceMock($repository);
-            }
-        );
-        $this->service->service = [
-            'class' => Delivery\ServiceMock::class,
-        ];
+        $result = $this->service->send($message);
 
-        $message = new Delivery\Message('text', 'recipient');
+        $this->assertEquals(Delivery\Result\Status::Queued, $result->status());
+        $this->assertEquals($message, $result->message());
+        $this->assertEmpty($this->mock->messages);
 
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $this->service->send($message);
+        $queued = $this->repository->getByResultId(Delivery\Yii2\Queue\Service::NAME, $result->messageId());
+        $this->assertNotNull($queued);
+        $this->assertEquals(Delivery\Result\Status::Queued, $queued->result()->status());
+
         $this->queue->run();
 
-        $this->assertTrue(
-            $repository->isSent($message)
-        );
+        $this->assertEquals([$message], $this->mock->messages);
+        $this->assertEquals(1, Delivery\Yii2\HistoryItem::find()->count());
+
+        $item = $this->repository->getById($queued->id());
+        $this->assertNotNull($item);
+        $this->assertEquals('mock', $item->serviceName());
+        $this->assertEquals('mock_1', $item->result()->messageId());
+        $this->assertEquals(Delivery\Result\Status::Accepted, $item->result()->status());
+        $this->assertEquals($message, $item->result()->message());
     }
 
     public function testSendSync(): void
     {
-        $repository = new Delivery\MemoryRepository();
-
-        \Yii::$container->setSingleton(
-            Delivery\ServiceMock::class,
-            function () use ($repository): Delivery\ServiceMock {
-                return new Delivery\ServiceMock($repository);
-            }
-        );
-        $this->service->service = [
-            'class' => Delivery\ServiceMock::class,
-        ];
-
-        $message = new Delivery\MessageWithOptions('text', 'recipient', [
-            Delivery\Yii2\Queue\Service::OPTION_SYNC => true,
+        $message = new Delivery\Message('text', '380930000001', [
+            Delivery\Yii2\Queue\Options::SYNC => true,
         ]);
-        $this->service->send($message);
 
-        // not calling $this->queue->run() to ensure message was sent without queue usage
-        $this->assertTrue(
-            $repository->isSent($message)
-        );
-    }
+        // queue is not run to ensure message is sent without queue usage
+        $result = $this->service->send($message);
 
-    public function testCreateWithSender(): void
-    {
-        $repository = new Delivery\MemoryRepository();
+        $this->assertEquals(Delivery\Result\Status::Accepted, $result->status());
+        $this->assertEquals('mock_1', $result->messageId());
+        $this->assertEquals([$message], $this->mock->messages);
+        $this->assertEquals(1, Delivery\Yii2\HistoryItem::find()->count());
 
-        \Yii::$container->setSingleton(
-            Delivery\ServiceMock::class,
-            function () use ($repository): Delivery\ServiceMock {
-                return new Delivery\ServiceMock($repository);
-            }
-        );
-        $this->service->service = [
-            'class' => Delivery\ServiceMock::class,
-        ];
-
-        $message = new Delivery\MessageWithSender('text', 'recipient', 'sender');
-
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $this->service->send($message);
-        $this->queue->run();
-
-        /** @var Delivery\HistoryItem $item */
-        $item = $repository->getHistoryItem($message);
-        $this->assertEquals('sender', $item->getSenderName());
+        $item = $this->repository->getByResultId('mock', 'mock_1');
+        $this->assertNotNull($item);
+        $this->assertEquals(Delivery\Result\Status::Accepted, $item->result()->status());
+        $this->assertEquals($message, $item->result()->message());
     }
 }
