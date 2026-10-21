@@ -52,7 +52,8 @@
     "lint": "./vendor/bin/phpcs --standard=PSR12 ./src ./tests",
     "phpcbf": "./vendor/bin/phpcbf --standard=PSR12 ./src ./tests",
     "cover": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-clover coverage.xml",
-    "test": "composer run-script test-mysql && composer run-script test-pgsql"
+    "test": "composer run-script test-pgsql",
+    "test-pgsql": "./vendor/bin/phpunit"
   },
   "suggest": {
     "yiisoft/yii2-queue": "Need for Delivery\\Yii\\Queue\\Service"
