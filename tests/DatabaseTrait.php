@@ -79,6 +79,7 @@ trait DatabaseTrait
             ob_end_clean();
         }
         $this->migrations = [];
+        \Yii::$app?->getErrorHandler()->unregister();
         \Yii::$app = null;
     }
 
