@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Wearesho\Delivery\Yii2\Tests\Unit\Queue;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Wearesho\Delivery;
 use Wearesho\Delivery\Yii2\Queue;
 use Wearesho\Delivery\Yii2\Tests\ServiceMock;
 
-/**
- * @coversDefaultClass \Wearesho\Delivery\Yii2\Queue\Job
- */
+#[CoversClass(Queue\Job::class)]
 class JobTest extends Delivery\Yii2\Tests\TestCase
 {
     private ServiceMock $service;
@@ -58,7 +57,7 @@ class JobTest extends Delivery\Yii2\Tests\TestCase
         );
 
         $this->createJob(new Queue\Item($message, 'job_1'))
-            ->execute($this->createMock(\yii\queue\Queue::class));
+            ->execute($this->createStub(\yii\queue\Queue::class));
 
         $this->assertEquals([$message], $this->service->messages);
 
@@ -81,7 +80,7 @@ class JobTest extends Delivery\Yii2\Tests\TestCase
         );
 
         $this->createJob(new Queue\Item($message, 'job_1'))
-            ->execute($this->createMock(\yii\queue\Queue::class));
+            ->execute($this->createStub(\yii\queue\Queue::class));
 
         $item = $this->repository->getById($queued->id());
         $this->assertNotNull($item);
@@ -96,7 +95,7 @@ class JobTest extends Delivery\Yii2\Tests\TestCase
         $message = new Delivery\Message('Text', '380930000001');
 
         $this->createJob(new Queue\Item($message, 'job_1'))
-            ->execute($this->createMock(\yii\queue\Queue::class));
+            ->execute($this->createStub(\yii\queue\Queue::class));
 
         $this->assertEquals([$message], $this->service->messages);
         $this->assertEquals(0, Delivery\Yii2\HistoryItem::find()->count());

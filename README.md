@@ -4,13 +4,15 @@
 [![Total Downloads](https://poser.pugx.org/wearesho-team/yii2-message-delivery/downloads.png)](https://packagist.org/packages/wearesho-team/yii2-message-delivery)
 [![codecov](https://codecov.io/gh/wearesho-team/yii2-message-delivery/branch/master/graph/badge.svg)](https://codecov.io/gh/wearesho-team/yii2-message-delivery)
 
-This repository includes [RepositoryInterface](https://github.com/wearesho-team/message-delivery/blob/1.2.0/src/RepositoryInterface.php)
+This repository includes [History\RepositoryInterface](https://github.com/wearesho-team/message-delivery/blob/master/src/History/RepositoryInterface.php)
 implementation using Yii2 ActiveRecord
+
+Compatibility: tested on PHP 8.4, PHP 8.5
 
 ## Installation
 
 ```bash
-composer require wearesho-team/yii2-message-delivery:^1.8.0
+composer require wearesho-team/yii2-message-delivery:^3.2
 ```
 
 ## Usage
@@ -32,7 +34,7 @@ return [
 This package provides optional [yii2-queue](https://github.com/yiisoft/yii2-queue) integration.
 To use it you have to install yii2-queue package:
 ```bash
-composer require yiisoft/yii2-queue:^2.0
+composer require yiisoft/yii2-queue:^2.3.8
 ```
 Then you may configure your application:
 ```php
@@ -47,7 +49,7 @@ return [
             'class' => Delivery\Yii2\Bootstrap::class,
             'service' => [
                 'class' => Delivery\Yii2\Queue\Service::class,
-                'service' => Delivery\ServiceMock::class, // you your custom Delivery\ServiceInterface implementation
+                'service' => Delivery\StubService::class, // your custom Delivery\ServiceInterface implementation
             ],
         ],
     ],
@@ -58,7 +60,7 @@ See yii2-queue for details*
 
 #### Skipping queue while sending message
 Sometimes there is need to send message without queue (for example during mass messaging in CLI environment).
-To skip queue service you need to create message with options (Delivery\MessageOptionsInterface):
+To skip queue service you need to create message with the `Delivery\Yii2\Queue\Options::SYNC` option:
 
 ```php
 <?php
@@ -66,11 +68,11 @@ To skip queue service you need to create message with options (Delivery\MessageO
 use Wearesho\Delivery;
 
 /** @var Delivery\Yii2\Queue\Service $service */
-$message = new Delivery\MessageWithOptions(
-    recipient: '380930000000',
+$message = new Delivery\Message(
     text: 'Message Text',
+    recipient: '380930000000',
     options: [
-        Delivery\Yii2\Queue\Service::OPTION_SYNC => true,  
+        Delivery\Yii2\Queue\Options::SYNC => true,
     ]
 );
 
@@ -86,10 +88,13 @@ use Wearesho\Delivery;
 use App;
 
 $service = new Delivery\Yii2\SwitchService([
-    'environmentKeyPrefix' => 'DELIVERY_', // by default,
+    'config' => [
+        'class' => Delivery\Yii2\SwitchService\EnvironmentConfig::class,
+        'keyPrefix' => 'DELIVERY_', // by default
+    ],
     'services' => [
         'default' => [
-            'class' => Delivery\ServiceMock::class,
+            'class' => Delivery\StubService::class,
         ],
         'production' => [
             'class' => App\Delivery\Service::class, // some Delivery\ServiceInterface implementation
@@ -105,9 +110,10 @@ $service->send($message); // production service will be used if it was configure
 
 ```
 
-### RepositoryService
-You can wrap any your service into RepositoryService, that has repository.
-If sending message in wrapped service did not throwed any exception message will be stored as sent.
+### History
+To store the results of sent messages, wrap your service into `Delivery\History\Service`
+(from [wearesho-team/message-delivery](https://github.com/wearesho-team/message-delivery))
+with this package's repository:
 
 ```php
 <?php
@@ -115,12 +121,12 @@ If sending message in wrapped service did not throwed any exception message will
 use Wearesho\Delivery;
 use App;
 
-$service = new Delivery\Yii2\RepositoryService([
-    'service' => App\CustomService::class,
-    'repository' => Delivery\Yii2\Repository::class, // or your own implementation
-]);
+$service = new Delivery\History\Service(
+    baseService: Delivery\Batch\Service::wrap(new App\CustomService()),
+    repository: new Delivery\Yii2\Repository(), // or your own implementation
+);
 
-// do what you want using Delivery\ServiceInterface
+// do what you want using Delivery\Batch\ServiceInterface
 ```
 
 ## Authors

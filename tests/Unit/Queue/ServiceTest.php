@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Wearesho\Delivery\Yii2\Tests\Unit\Queue;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Wearesho\Delivery;
 use Wearesho\Delivery\Yii2\Tests\ServiceMock;
 use yii\base;
 use yii\queue;
 
-/**
- * @coversDefaultClass \Wearesho\Delivery\Yii2\Queue\Service
- */
+#[CoversClass(Delivery\Yii2\Queue\Service::class)]
 class ServiceTest extends Delivery\Yii2\Tests\TestCase
 {
     private queue\sync\Queue $queue;

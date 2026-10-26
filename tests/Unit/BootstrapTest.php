@@ -29,6 +29,7 @@ class BootstrapTest extends TestCase
 
     protected function tearDown(): void
     {
+        \Yii::$app?->getErrorHandler()->unregister();
         \Yii::$app = null;
         \Yii::$container = new di\Container();
         \Yii::$aliases = $this->aliases;
@@ -66,7 +67,7 @@ class BootstrapTest extends TestCase
         $bootstrap = new Delivery\Yii2\Bootstrap([
             'service' => ServiceMock::class,
         ]);
-        $bootstrap->bootstrap($this->createMock(web\Application::class));
+        $bootstrap->bootstrap($this->createStub(web\Application::class));
 
         $this->assertFalse(\Yii::getAlias('@Wearesho/Delivery/Yii2/Migrations', false));
         $this->assertInstanceOf(
